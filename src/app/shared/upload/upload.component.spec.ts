@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import UploadComponent from './upload.component';
 
 describe('UploadComponent', () => {
@@ -9,6 +9,8 @@ describe('UploadComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [UploadComponent],
+      imports: [TranslateModule.forRoot()],
+      providers: [TranslateService],
     }).compileComponents();
   });
 

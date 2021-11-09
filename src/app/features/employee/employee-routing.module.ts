@@ -1,32 +1,39 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-// import AuthenticationGuard from 'src/app/core/authentication/authentication.guard';
+import AuthenticationGuard from '../../core/authentication/authentication.guard';
 import EmployeeDetailComponent from './views/employee-detail/employee-detail.component';
-import EmployeeComponent from './views/employee/employee.component';
-import NotificationPageComponent from './views/notification-page/notification-page.component';
+import EmployeeAddComponent from './views/employee-add/employee-add.component';
+import EmployeeCreationStatusComponent from './views/employee-creation-status/employee-creation-status.component';
+import { EmployeeOverviewComponent } from './views/employee-overview/employee-overview.component';
 
 const routes: Routes = [
-  // {
-  //   path: '',
-  //   redirectTo: 'dashboard',
-  //   pathMatch: 'full',
-  // },
+  {
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full',
+  },
   {
     path: 'dashboard',
-    component: EmployeeComponent,
-    // canActivate: [AuthenticationGuard],
-    // data: { roles: ['hr-admin'] }, // based on permissions model currently only hr-admin should get access to this route
+    component: EmployeeOverviewComponent,
+    canActivate: [AuthenticationGuard],
+    data: { roles: ['hr-admin'] },
+  },
+  {
+    path: 'add-employee',
+    component: EmployeeAddComponent,
+    canActivate: [AuthenticationGuard],
+    data: { roles: ['hr-admin'] },
   },
   {
     path: 'detail/:id',
     component: EmployeeDetailComponent,
-    // canActivate: [AuthenticationGuard],
-    // data: { roles: ['hr-admin', 'employee'] }, // based on permissions model currently only hr-admin and employee should get access to this route
+    canActivate: [AuthenticationGuard],
+    data: { roles: ['hr-admin', 'employee'] },
   },
   {
     path: 'creation-status',
-    component: NotificationPageComponent,
-    // canActivate: [AuthenticationGuard]
+    component: EmployeeCreationStatusComponent,
+    canActivate: [AuthenticationGuard],
   },
 ];
 

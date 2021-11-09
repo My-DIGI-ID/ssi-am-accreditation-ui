@@ -1,83 +1,128 @@
 <div class="container">
   <div class="row">
-    <h1>Gästeübersicht</h1>
-    <a mat-flat-button [disableRipple]="true" color="primary" id="addGuest" [routerLink]="['../add']"
-      ><mat-icon aria-hidden="false" aria-label="add guest">add</mat-icon>NEUEN GAST ANLEGEN</a
-    >
+    <h1 id="caption">
+      {{ 'guest.guest-overview-component.table-title' | translate }}
+    </h1>
+    <a mat-flat-button [disableRipple]="true" color="primary" id="addGuest" [routerLink]="['../add']">
+      <mat-icon
+        aria-hidden="false"
+        attr.aria-label="{{ 'guest.guest-overview-component.aria-label.table.add-button' | translate }}"
+      >
+        add
+      </mat-icon>
+      {{ 'guest.guest-overview-component.table-add-button' | translate }}
+    </a>
   </div>
   <div class="table-row">
-    <table mat-table [dataSource]="dataSource" matSort>
+    <mat-table [dataSource]="dataSource" matSort aria-labelledby="caption">
       <ng-container matColumnDef="firstName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <span>Vorname</span>
-        </th>
-        <td mat-cell *matCellDef="let element">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>
+            {{ 'guest.guest-overview-component.table-headers.first-name' | translate }}
+          </span>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
           {{ element.firstName }}
-        </td>
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="lastName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <span>Nachname</span>
-        </th>
-        <td mat-cell *matCellDef="let element">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>
+            {{ 'guest.guest-overview-component.table-headers.last-name' | translate }}
+          </span>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
           {{ element.lastName }}
-        </td>
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="arriving">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <span>Ankunftszeit</span>
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.validFromDate | guestDisplayPipe }}
-        </td>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>
+            {{ 'guest.guest-overview-component.table-headers.arriving' | translate }}
+          </span>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.arriving }}
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="leaving">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <span>Abreisezeit</span>
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.validUntilDate | guestDisplayPipe }}
-        </td>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>
+            {{ 'guest.guest-overview-component.table-headers.leaving' | translate }}
+          </span>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.leaving }}
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <span>E-Mail-Adresse</span>
-        </th>
-        <td mat-cell *matCellDef="let element">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>
+            {{ 'guest.guest-overview-component.table-headers.email' | translate }}
+          </span>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
           {{ element.email }}
-        </td>
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="location">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <span>Ort / Gebäude</span>
-        </th>
-        <td mat-cell *matCellDef="let element">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>
+            {{ 'guest.guest-overview-component.table-headers.location' | translate }}
+          </span>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
           {{ element.location }}
-        </td>
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <span>Status</span>
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span id="download-email-button" (click)="downloadEmail(element.id)" mat-dialog-close="true">
-            <mat-icon>cloud_download</mat-icon>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span>
+            {{ 'guest.guest-overview-component.table-headers.status' | translate }}
           </span>
-        </td>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element"></mat-cell>
       </ng-container>
       <ng-container matColumnDef="edit">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element">
-          <span id="edit-guest-button" (click)="editGuest(element.id)">
+        <mat-header-cell *matHeaderCellDef>
+          {{ 'guest.guest-overview-component.table-headers.action' | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span
+            attr.aria-label="{{
+              'guest.guest-overview-component.aria-label.table.action-menu.download-email' | translate
+            }}"
+            role="button"
+            tabindex="0"
+            id="download-email-button"
+            (click)="downloadEmail(element.id)"
+          >
+            <mat-icon>email</mat-icon>
+          </span>
+          <span
+            attr.aria-label="{{ 'guest.guest-overview-component.aria-label.table.action-menu.edit-guest' | translate }}"
+            role="button"
+            tabindex="0"
+            id="edit-guest-button"
+            (click)="editGuest(element.id)"
+          >
             <mat-icon>edit</mat-icon>
           </span>
-          <span id="delete-guest-button" (click)="deleteGuest(element.id)">
+          <span
+            attr.aria-label="{{
+              'guest.guest-overview-component.aria-label.table.action-menu.delete-guest' | translate
+            }}"
+            role="button"
+            tabindex="0"
+            id="delete-guest-button"
+            (click)="openDeleteGuestDialog(element.id)"
+          >
             <mat-icon>delete</mat-icon>
           </span>
-        </td>
+        </mat-cell>
       </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
   </div>
 </div>

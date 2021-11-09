@@ -39,7 +39,7 @@ export default class UploadService {
 
   public appendFileToFormData(file: File): FormData {
     const formData = new FormData();
-    formData.append('employeecsv', file, 'employees.csv');
+    formData.append('file', file, file.name);
 
     return formData;
   }

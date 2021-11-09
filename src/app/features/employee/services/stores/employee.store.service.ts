@@ -1,3 +1,4 @@
+import { HttpEvent, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import EmployeeApiModel from 'features/employee/models/employee-api.model';
@@ -34,18 +35,23 @@ export default class EmployeeStoreService extends AbstractStore<EmployeeViewMode
     newEmployeeApiModel.primaryPhoneNumber = employeeFormModel.primaryPhone;
     newEmployeeApiModel.secondaryPhoneNumber = employeeFormModel.secondaryPhone;
     newEmployeeApiModel.employeeState = employeeFormModel.employeeStatus;
+    newEmployeeApiModel.companyReference = employeeFormModel.firmReference;
     this.addEmployee(newEmployeeApiModel);
   }
 
   handleCSVUpload(formData: FormData): void {
     this.employeeApiService.saveEmployeeCSV(formData).subscribe(
-      (response: EmployeeViewModel | EmployeeViewModel[]) => {
-        this.storeSubject.next(this.update(response));
-        this.handleOnResponse(true);
+      (response: HttpEvent<any>) => {
+        if (response instanceof HttpResponse) {
+          if (response.status === 200) {
+            this.storeSubject.next(this.update(response.body));
+            this.handleOnResponse(true, response.body);
+          }
+        }
       },
       (error: Error) => {
         console.error('Error', error);
-        this.handleOnResponse(false);
+        this.handleOnResponse(false, error);
       }
     );
   }
@@ -58,13 +64,13 @@ export default class EmployeeStoreService extends AbstractStore<EmployeeViewMode
 
   public addEmployee(employee: EmployeeApiModel): void {
     this.employeeApiService.saveEmployee(employee).subscribe(
-      (response: EmployeeViewModel | EmployeeViewModel[]) => {
+      (response: EmployeeViewModel) => {
         this.storeSubject.next(this.update(response));
-        this.handleOnResponse(true);
+        this.handleOnResponse(true, [response]);
       },
       (error: any) => {
         console.error('Error', error);
-        this.handleOnResponse(false);
+        this.handleOnResponse(false, error);
       }
     );
   }
@@ -86,10 +92,11 @@ export default class EmployeeStoreService extends AbstractStore<EmployeeViewMode
     return this.storeSubject.value;
   }
 
-  private handleOnResponse(status: boolean): void {
+  private handleOnResponse(status: boolean, responseData: Error | EmployeeViewModel[]): void {
     this.router.navigate(['/employee/creation-status'], {
       state: {
         success: status,
+        data: responseData,
       },
     });
   }

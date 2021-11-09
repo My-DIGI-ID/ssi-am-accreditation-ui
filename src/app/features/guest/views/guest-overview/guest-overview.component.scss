@@ -10,19 +10,24 @@ a#addGuest {
   background-color: $color-blue;
 }
 
-table {
+a#addGuest:focus {
+  background-color: $color-blue;
+  outline: 2px solid $color-grey-5;
+}
+
+mat-table {
   width: 90%;
   margin-top: 30px;
   font-weight: $font-weight-100;
 
-  td {
-    background-color: $color-grey-2-opacity-30;
+  mat-cell {
+    background-color: $color-light-1;
     color: $color-dark;
     font-size: $font-size-16;
     border-bottom-color: $color-grey-2;
   }
 
-  th {
+  mat-header-cell {
     color: $color-grey-3;
     border-bottom-color: $color-grey-2;
     font-size: $font-size-16;
@@ -33,8 +38,13 @@ table {
     cursor: pointer;
   }
 
+  #edit-guest-button {
+    margin: 0 10px 0 10px;
+  }
+
   mat-icon {
-    color: $color-grey-2;
+    color: $color-grey-5;
+    cursor: pointer;
   }
 
   mat-cell {

@@ -1,0 +1,38 @@
+<h1>{{ getHeaderText() }}</h1>
+<p>{{ getStatusText() }}</p>
+
+<ul>
+  <li *ngFor="let employee of employees">
+    <ng-container *ngIf="success">
+      <div>
+        <mat-icon>done</mat-icon>
+        <p>{{ employee.firstName }} {{ employee.lastName }}</p>
+      </div>
+      <p>{{ employee.email }}</p>
+    </ng-container>
+  </li>
+</ul>
+
+<ng-container *ngIf="!success">
+  <div>
+    <mat-icon>notifications_outlined</mat-icon>
+    <p>{{ errorMessage }}</p>
+  </div>
+  <p *ngIf="!success">
+    {{ 'employee.employee-creation-status-component.error.note' | translate }}
+  </p>
+</ng-container>
+<button type="button" *ngIf="success" mat-button (click)="goToAddEmployee()" id="addEmployee">
+  <mat-icon>add</mat-icon>
+  {{ 'employee.employee-creation-status-component.button.add-another-employee' | translate }}
+</button>
+<button
+  type="button"
+  mat-flat-button
+  color="primary"
+  [disableRipple]="true"
+  (click)="goToDashboard()"
+  id="navToOverview"
+>
+  {{ 'employee.employee-creation-status-component.button.back-to-the-overview' | translate }}
+</button>

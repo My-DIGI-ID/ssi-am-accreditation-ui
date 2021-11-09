@@ -7,6 +7,8 @@
  * Should not contain anything other than interface implementation or factory methods
  */
 export default class EmployeeApiModel {
+  id: string;
+
   firstName!: string;
 
   lastName!: string;
@@ -23,7 +25,7 @@ export default class EmployeeApiModel {
 
   position?: string;
 
-  employeeId?: string;
+  employeeId!: string;
 
   companyName?: string;
 
@@ -32,4 +34,6 @@ export default class EmployeeApiModel {
   companyPostalCode?: string;
 
   companyCity?: string;
+
+  companyReference?: string;
 }

@@ -15,21 +15,12 @@ export default class GuestAccreditationApiService {
 
   constructor(private readonly http: HttpClient, private readonly configServie: ConfigInitService) {}
 
-  public getInvitationEmail(guestId: string): Observable<any> {
-    return this.http.post<any>(
-      `${
-        this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
-      }/accreditation/guest/initiate/invitation-email/${guestId}`,
-      {}
-    );
-  }
-
   public getBasisIdCheckCompletionStatus(accreditationId: string): Observable<any> {
     // @ToDo: make the endpoint more configurable
     return this.http.get(
       `${
         this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
-      }/accreditation/guest/validate/basis-id-process-completion/${accreditationId}`
+      }/api/v2/accreditation/guest/validate/basis-id-process-completion/${accreditationId}`
     );
   }
 
@@ -37,7 +28,7 @@ export default class GuestAccreditationApiService {
     return this.http.patch(
       `${
         this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
-      }/accreditation/guest/proceed/qr-code/${accreditationId}`,
+      }/api/v2/accreditation/guest/proceed/qr-code/${accreditationId}`,
       {}
     );
   }
@@ -46,7 +37,7 @@ export default class GuestAccreditationApiService {
     return this.http.patch(
       `${
         this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
-      }/accreditation/guest/offer/${accreditationId}`,
+      }/api/v2/accreditation/guest/offer/${accreditationId}`,
       {}
     );
   }
@@ -55,7 +46,7 @@ export default class GuestAccreditationApiService {
     return this.http.get(
       `${
         this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
-      }/accreditation/guest/validate/accreditation-process-completion/${accreditationId}`
+      }/api/v2/accreditation/guest/validate/accreditation-process-completion/${accreditationId}`
     );
   }
 }

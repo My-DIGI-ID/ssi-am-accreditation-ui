@@ -3,15 +3,11 @@ export default class GuestFormModel {
 
   lastName: string;
 
+  companyName: string;
+
   title?: string;
 
   email: string;
-
-  primaryPhoneNumber?: string;
-
-  secondaryPhoneNumber?: string;
-
-  companyName: string;
 
   typeOfVisit: string;
 
@@ -19,9 +15,9 @@ export default class GuestFormModel {
 
   validFromDate: string;
 
-  validUntilDate: string;
-
   validFromTime: string;
+
+  validUntilDate: string;
 
   validUntilTime: string;
 }

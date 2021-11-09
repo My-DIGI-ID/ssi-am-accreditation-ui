@@ -1,4 +1,6 @@
 export default class GuestApiModel {
+  id: string;
+
   title?: string;
 
   firstName: string;
@@ -17,13 +19,13 @@ export default class GuestApiModel {
 
   location: string;
 
-  validFromDate: string;
+  validFrom: string;
 
-  validFromTime: string;
+  validUntil: string;
 
-  validUntilDate: string;
+  issuedBy?: string; // alias: issuedBy
 
-  validUntilTime: string;
+  createdBy?: string;
 
-  issuedBy?: string;
+  createdAt?: string;
 }

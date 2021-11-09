@@ -5,7 +5,6 @@ import GuestApiModel from 'features/guest/models/guest-api.model';
 import GuestViewModel from 'features/guest/models/guest-view.model';
 import { map, takeUntil } from 'rxjs/operators';
 import AbstractStore from 'shared/abstractions/store.abstract';
-import { ApplicationURL } from 'shared/utilities/application-url';
 import GuestAccreditionModel from 'features/guest/models/guest-accreditation.model';
 import GuestExtendedApiModel from 'features/guest/models/guest-extended-api.model';
 import { Observable, Subject } from 'rxjs';
@@ -37,56 +36,12 @@ export default class GuestStoreService extends AbstractStore<GuestViewModel[]> {
       .pipe(map((apiModel: GuestApiModel[]) => apiModel.map((el) => Object.assign(new GuestViewModel(), el))));
   }
 
-  private update(data: GuestViewModel | GuestViewModel[]): GuestViewModel[] {
-    if (Array.isArray(data)) {
-      this.storeSubject.value.push(Object.assign(new GuestViewModel(), data));
-      return this.storeSubject.value;
-    }
-    this.storeSubject.value.push(data);
-
-    return this.storeSubject.value;
-  }
-
-  public handleCSVUpload(formData: FormData): void {
-    this.guestApiService.saveCSV(formData).subscribe(
-      (response: GuestViewModel | GuestViewModel[]) => {
-        this.storeSubject.next(this.update(response));
-        this.handleOnResponse(true);
-      },
-      (error) => {
-        console.log(error);
-        this.handleOnResponse(false);
-      }
-    );
-  }
-
-  public getGuests(): Observable<GuestApiModel[]> {
-    return this.guestApiService.getGuests().pipe(map((result: any) => result));
-  }
-
   public getGuestById(accreditationId: string): Observable<GuestAccreditionModel> {
     return this.guestApiService.getGuestById(accreditationId).pipe(map((result: GuestAccreditionModel) => result));
   }
 
-  public addGuest(guest: GuestApiModel): void {
-    this.guestApiService.saveGuest(guest).subscribe(
-      () => {
-        // this.storeSubject.next(this.update(response));
-        this.handleOnResponse(true);
-      },
-      (error: any) => {
-        console.error('Error', error);
-        this.handleOnResponse(false);
-      }
-    );
-  }
-
   public extendGuestData(guest: GuestExtendedApiModel, accreditationId: string): Observable<any> {
     return this.guestApiService.updateExtendedGuest(guest, accreditationId);
-  }
-
-  public downloadEmail(id: string): Observable<any> {
-    return this.guestAccreditationApiService.getInvitationEmail(id);
   }
 
   public getQRCode(accreditationId: string): Observable<string> {
@@ -160,13 +115,5 @@ export default class GuestStoreService extends AbstractStore<GuestViewModel[]> {
     });
 
     return statusChangeObservable.pipe(takeUntil(this.credentialsOffered));
-  }
-
-  private handleOnResponse(status: boolean): void {
-    this.router.navigate([ApplicationURL.GuestCreationStatus], {
-      state: {
-        success: status,
-      },
-    });
   }
 }

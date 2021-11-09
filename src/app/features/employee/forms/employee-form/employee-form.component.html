@@ -1,12 +1,16 @@
 <form [formGroup]="employeeFormGroup" (submit)="submitEmployee()">
   <section>
     <div class="column column-left">
-      <h1>Employee Details</h1>
+      <h1>
+        {{ 'employee.employee-add-component.form.employee-information.title' | translate }}
+      </h1>
     </div>
     <div class="column column-right">
       <div class="row">
         <mat-form-field appearance="fill">
-          <mat-label>First name</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.employee-information.field.first-name' | translate }}
+          </mat-label>
           <input
             matInput
             class="form-control input"
@@ -17,17 +21,19 @@
             required
           />
           <mat-error *ngIf="employeeFormGroup.controls.firstName.hasError('maxLength')">
-            First name has a maximum of 50 characters
+            {{ 'employee.employee-add-component.form.error.max-length.first-name' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.firstName.hasError('required')">
-            First name is <strong>required</strong>
+            {{ 'employee.employee-add-component.form.error.required.first-name' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.firstName.hasError('fieldContainsForbiddenCharacters')">
-            First name can only contain alphanumeric characters and the following special characters: _ , . - &
+            {{ 'employee.employee-add-component.form.error.forbidden-characters.first-name' | translate }}
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
-          <mat-label>Last name</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.employee-information.field.last-name' | translate }}
+          </mat-label>
           <input
             matInput
             class="form-control input"
@@ -38,41 +44,47 @@
             required
           />
           <mat-error *ngIf="employeeFormGroup.controls.lastName.hasError('maxLength')">
-            Last name has a maximum of 50 characters
+            {{ 'employee.employee-add-component.form.error.max-length.last-name' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.lastName.hasError('required')">
-            Last name is <strong>required</strong>
+            {{ 'employee.employee-add-component.form.error.required.last-name' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.lastName.hasError('fieldContainsForbiddenCharacters')">
-            Last name can only contain alphanumeric characters and the following special characters: _ , . - &
+            {{ 'employee.employee-add-component.form.error.forbidden-characters.last-name' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
       <div class="row">
         <mat-form-field appearance="fill">
-          <mat-label>Title</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.employee-information.field.title' | translate }}
+          </mat-label>
           <input matInput class="form-control input" formControlName="title" id="title" type="text" maxlength="50" />
           <mat-error *ngIf="employeeFormGroup.controls.title.hasError('maxLength')">
-            Title has a maximum of 50 characters
+            {{ 'employee.employee-add-component.form.error.max-length.title' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.title.hasError('fieldContainsForbiddenCharacters')">
-            Title can only contain alphanumeric characters and the following special characters: _ , . - &
+            {{ 'employee.employee-add-component.form.error.forbidden-characters.title' | translate }}
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
-          <mat-label>Email address</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.employee-information.field.email-address' | translate }}
+          </mat-label>
           <input matInput class="form-control input" formControlName="email" id="email" type="email" required />
-          <mat-error *ngIf="!employeeFormGroup.controls.email.hasError('email')">
-            Please enter a valid email address
+          <mat-error *ngIf="employeeFormGroup.controls.email.hasError('email')">
+            {{ 'employee.employee-add-component.form.error.format.email-address' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.email.hasError('required')">
-            Email is <strong>required</strong>
+            {{ 'employee.employee-add-component.form.error.required.email-address' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
       <div class="row">
         <mat-form-field appearance="fill">
-          <mat-label>Primary phone</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.employee-information.field.primary-phone' | translate }}
+          </mat-label>
           <input
             matInput
             class="form-control input"
@@ -82,17 +94,19 @@
             required
           />
           <mat-error *ngIf="employeeFormGroup.controls.primaryPhone.hasError('required')">
-            Primary phone is <strong>required</strong>
+            {{ 'employee.employee-add-component.form.error.required.primary-phone' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.primaryPhone.hasError('phoneContainsForbiddenCharacters')">
-            Phone number can only contain digits or the following punctuation marks: +, -, ()
+            {{ 'employee.employee-add-component.form.error.forbidden-characters.primary-phone' | translate }}
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
-          <mat-label>Secondary phone</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.employee-information.field.secondary-phone' | translate }}
+          </mat-label>
           <input matInput class="form-control input" formControlName="secondaryPhone" id="secondaryPhone" type="tel" />
           <mat-error *ngIf="employeeFormGroup.controls.secondaryPhone.hasError('phoneContainsForbiddenCharacters')">
-            Phone number can only contain digits or the following punctuation marks: +, -, ()
+            {{ 'employee.employee-add-component.form.error.forbidden-characters.secondary-phone' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
@@ -102,23 +116,29 @@
 
   <section>
     <div class="column column-left">
-      <h1>Employee Information</h1>
+      <h1>
+        {{ 'employee.employee-add-component.form.employee-occupation.title' | translate }}
+      </h1>
     </div>
     <div class="column column-right">
       <div class="row">
         <mat-form-field appearance="fill">
-          <mat-label>Employee status</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.employee-occupation.field.employee-status' | translate }}
+          </mat-label>
           <mat-select formControlName="employeeStatus" required>
             <mat-option *ngFor="let status of employeeStatuses" [value]="status.value">
               {{ status.viewValue }}
             </mat-option>
           </mat-select>
           <mat-error *ngIf="employeeFormGroup.controls.employeeStatus.hasError('required')">
-            Employee status is <strong>required</strong>
+            {{ 'employee.employee-add-component.form.error.required.employee-status' | translate }}
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
-          <mat-label>Employee role</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.employee-occupation.field.employee-role' | translate }}
+          </mat-label>
           <input
             matInput
             class="form-control input"
@@ -128,16 +148,18 @@
             maxlength="50"
           />
           <mat-error *ngIf="employeeFormGroup.controls.employeeRole.hasError('maxLength')">
-            Employee role has a maximum of 50 characters
+            {{ 'employee.employee-add-component.form.error.max-length.employee-role' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.employeeRole.hasError('fieldContainsForbiddenCharacters')">
-            Employee role can only contain alphanumeric characters and the following special characters: _ , . - &
+            {{ 'employee.employee-add-component.form.error.forbidden-characters.employee-role' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
       <div class="row">
         <mat-form-field appearance="fill">
-          <mat-label>Employee ID</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.employee-occupation.field.employee-id' | translate }}
+          </mat-label>
           <input
             matInput
             class="form-control input"
@@ -147,10 +169,10 @@
             maxlength="50"
           />
           <mat-error *ngIf="employeeFormGroup.controls.employeeId.hasError('maxLength')">
-            Employee ID has a maximum of 50 characters
+            {{ 'employee.employee-add-component.form.error.max-length.employee-id' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.employeeId.hasError('fieldContainsForbiddenCharacters')">
-            Employee ID can only contain alphanumeric characters and the following special characters: _ , . - &
+            {{ 'employee.employee-add-component.form.error.forbidden-characters.employee-id' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
@@ -159,12 +181,16 @@
   <hr />
   <section>
     <div class="column column-left">
-      <h1>Employer Location</h1>
+      <h1>
+        {{ 'employee.employee-add-component.form.company-location.title' | translate }}
+      </h1>
     </div>
     <div class="column column-right">
       <div class="row">
         <mat-form-field appearance="fill">
-          <mat-label>Company Name</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.company-location.field.company-name' | translate }}
+          </mat-label>
           <input
             matInput
             class="form-control input"
@@ -175,17 +201,19 @@
             required
           />
           <mat-error *ngIf="employeeFormGroup.controls.firmName.hasError('maxLength')">
-            Company name has a maximum of 100 characters
+            {{ 'employee.employee-add-component.form.error.max-length.company-name' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.firmName.hasError('required')">
-            Company name is <strong>required</strong>
+            {{ 'employee.employee-add-component.form.error.required.company-name' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.firmName.hasError('fieldContainsForbiddenCharacters')">
-            Company name can only contain alphanumeric characters and the following special characters: _ , . - &
+            {{ 'employee.employee-add-component.form.error.forbidden-characters.company-name' | translate }}
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
-          <mat-label>Company Address</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.company-location.field.company-street' | translate }}
+          </mat-label>
           <input
             matInput
             class="form-control input"
@@ -196,19 +224,21 @@
             required
           />
           <mat-error *ngIf="employeeFormGroup.controls.firmStreet.hasError('maxLength')">
-            Company address code has a maximum of 50 characters
+            {{ 'employee.employee-add-component.form.error.max-length.company-street' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.firmStreet.hasError('required')">
-            Company address is <strong>required</strong>
+            {{ 'employee.employee-add-component.form.error.required.company-street' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.firmStreet.hasError('fieldContainsForbiddenCharacters')">
-            Company address can only contain alphanumeric characters and the following special characters: _ , . - &
+            {{ 'employee.employee-add-component.form.error.forbidden-characters.company-street' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
       <div class="row">
         <mat-form-field appearance="fill">
-          <mat-label>Company Address Postcode</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.company-location.field.company-postal-code' | translate }}
+          </mat-label>
           <input
             matInput
             class="form-control input"
@@ -219,17 +249,19 @@
             required
           />
           <mat-error *ngIf="employeeFormGroup.controls.firmPostalCode.hasError('maxLength')">
-            Company postal code has a maximum of 50 characters
+            {{ 'employee.employee-add-component.form.error.max-length.company-postal-code' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.firmPostalCode.hasError('required')">
-            Company postal code is <strong>required</strong>
+            {{ 'employee.employee-add-component.form.error.required.company-postal-code' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.firmPostalCode.hasError('fieldContainsForbiddenCharacters')">
-            Company postal code can only contain alphanumeric characters and the following special characters: _ , . - &
+            {{ 'employee.employee-add-component.form.error.forbidden-characters.company-postal-code' | translate }}
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
-          <mat-label>Company City</mat-label>
+          <mat-label>
+            {{ 'employee.employee-add-component.form.company-location.field.company-city' | translate }}
+          </mat-label>
           <input
             matInput
             class="form-control input"
@@ -240,13 +272,34 @@
             required
           />
           <mat-error *ngIf="employeeFormGroup.controls.firmCity.hasError('maxLength')">
-            Company city has a maximum of 50 characters
+            {{ 'employee.employee-add-component.form.error.max-length.company-city' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.firmCity.hasError('required')">
-            Company city is <strong>required</strong>
+            {{ 'employee.employee-add-component.form.error.required.company-city' | translate }}
           </mat-error>
           <mat-error *ngIf="employeeFormGroup.controls.firmCity.hasError('fieldContainsForbiddenCharacters')">
-            Company city can only contain alphanumeric characters and the following special characters: _ , . - &
+            {{ 'employee.employee-add-component.form.error.forbidden-characters.company-city' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field appearance="fill">
+          <mat-label>
+            {{ 'employee.employee-add-component.form.company-location.field.company-reference' | translate }}
+          </mat-label>
+          <input
+            matInput
+            class="form-control input"
+            formControlName="firmReference"
+            id="firmReference"
+            type="text"
+            maxlength="50"
+          />
+          <mat-error *ngIf="employeeFormGroup.controls.firmReference.hasError('maxLength')">
+            {{ 'employee.employee-add-component.form.error.max-length.company-reference' | translate }}
+          </mat-error>
+          <mat-error *ngIf="employeeFormGroup.controls.firmReference.hasError('fieldContainsForbiddenCharacters')">
+            {{ 'employee.employee-add-component.form.error.forbidden-characters.company-reference' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
@@ -255,7 +308,7 @@
   <hr />
   <div class="button-container">
     <button color="primary" type="submit" mat-flat-button class="submit-form" [disabled]="employeeFormGroup.invalid">
-      SUBMIT
+      {{ 'employee.employee-add-component.button.send' | translate }}
     </button>
   </div>
 </form>

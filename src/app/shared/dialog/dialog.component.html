@@ -1,0 +1,22 @@
+<div class="dialog-container">
+  <div class="dialog-title">
+    <span>{{ dialogTitle }}</span>
+  </div>
+  <div class="dialog-description">
+    <span>{{ dialogDescription }}</span>
+  </div>
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button
+      class="dialog-button"
+      id="dialog-first-button"
+      mat-flat-button
+      mat-dialog-close
+      (click)="dialogAction('first')"
+    >
+      {{ firstButtonText }}
+    </button>
+    <button class="dialog-button" mat-flat-button id="dialog-second-button" (click)="dialogAction('second')">
+      {{ secondButtonText }}
+    </button>
+  </mat-dialog-actions>
+</div>

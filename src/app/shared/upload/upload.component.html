@@ -1,10 +1,16 @@
 <div class="dropzone" appDragAndDrop (fileDropped)="onFileDropped($event)" (dropAreaActive)="onDropAreaActive($event)">
   <input type="file" #fileDropReference id="fileDropReference" (change)="fileSelectionHandler($event)" accept=".csv" />
   <ng-container *ngIf="!fileInDropArea; else dropFile">
-    <p>You can drop .csv files here that contain employee details, or use the upload button below</p>
-    <label for="fileDropReference" class="button-label">upload .csv file</label>
+    <p>
+      {{ 'employee.employee-add-component.employee-csv-upload.upload-component.area-text' | translate }}
+    </p>
+    <label for="fileDropReference" class="button-label" role="button" tabindex="0">
+      {{ 'employee.employee-add-component.employee-csv-upload.upload-component.upload-button' | translate }}
+    </label>
   </ng-container>
   <ng-template #dropFile>
-    <p>Drop file here to upload</p>
+    <p>
+      {{ 'employee.employee-add-component.employee-csv-upload.upload-component.drop-file' | translate }}
+    </p>
   </ng-template>
 </div>

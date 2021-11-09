@@ -1,8 +1,9 @@
+/* eslint-disable class-methods-use-this */
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import EmployeeApiModel from 'features/employee/models/employee-api.model';
 import { Observable } from 'rxjs';
-import ConfigInitService from 'src/app/init/config-init.service';
+import ConfigInitService from '../../../../init/config-init.service';
+import EmployeeApiModel from '../../models/employee-api.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,34 +19,48 @@ export default class EmployeeApiService {
 
   public getEmployee(id: string): Observable<EmployeeApiModel> {
     return this.http.get<EmployeeApiModel>(
-      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/party/employee/${id}`
+      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/party/employee/${id}`
     );
   }
 
   public getEmployees(): Observable<EmployeeApiModel[]> {
     return this.http.get<EmployeeApiModel[]>(
-      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/party/employee/`
+      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/party/employee/`
     );
   }
 
   public saveEmployee(employeeApiModel: EmployeeApiModel): Observable<EmployeeApiModel> {
     return this.http.post<EmployeeApiModel>(
-      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/party/employee/`,
+      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/party/employee/`,
       employeeApiModel,
       this.httpHeader
     );
   }
 
   public saveEmployeeCSV(formdata: FormData): Observable<any> {
-    this.httpHeader.headers.set('Content-Type', 'multipart/form-data');
     return this.http.post<FormData>(
-      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/party/employee/csv`,
+      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/party/employee/csv`,
       formdata,
       {
-        headers: this.httpHeader.headers,
+        headers: this.httpHeader.headers.delete('Content-Type'),
         observe: 'events',
         reportProgress: true,
       }
+    );
+  }
+
+  public getInvitationEmail(employeeId: string): Observable<any> {
+    return this.http.post<any>(
+      `${
+        this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
+      }/api/v2/accreditation/employee/initiate/invitation-email/${employeeId}`,
+      {}
+    );
+  }
+
+  public getEmployeesAccredtitation(): Observable<any> {
+    return this.http.get<EmployeeApiModel>(
+      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/accreditation/employee`
     );
   }
 }

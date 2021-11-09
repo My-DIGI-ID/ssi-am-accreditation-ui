@@ -1,11 +1,12 @@
 /* eslint-disable class-methods-use-this */
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import GuestFormModel from '../../models/guest-form.model';
 import { GuestFormComponent } from '../../forms/guest-form/guest-form.component';
+import { ApplicationURL } from '../../../../shared/utilities/application-url';
 import FormValidator from '../../../../shared/utilities/form-validator';
 import GuestApiModel from '../../models/guest-api.model';
-import GuestStoreService from '../../services/stores/guest-store.service';
-import { ApplicationURL } from '../../../../shared/utilities/application-url';
+import GuestDashboardStoreService from '../../services/stores/guest-dashboard-store.service';
 
 @Component({
   selector: 'app-guest-add',
@@ -19,7 +20,7 @@ export default class GuestAddComponent {
 
   public constructor(
     public readonly formValidator: FormValidator,
-    private readonly guestStoreService: GuestStoreService,
+    private readonly guestDashboardStoreService: GuestDashboardStoreService,
     private readonly router: Router
   ) {}
 
@@ -28,7 +29,7 @@ export default class GuestAddComponent {
       const guest = this.createGuestApiDTO();
 
       try {
-        this.guestStoreService.addGuest(guest);
+        this.guestDashboardStoreService.addGuest(guest);
       } catch (error) {
         console.log(error);
       }
@@ -40,26 +41,37 @@ export default class GuestAddComponent {
   }
 
   private createGuestApiDTO(): GuestApiModel {
-    const guestSanitize: GuestApiModel = this.sanitizeValues();
+    const guestSanitize: GuestFormModel = this.sanitizeValues();
 
-    guestSanitize.title = guestSanitize.title === '' ? 'Ms' : guestSanitize.title;
+    const guestA: GuestApiModel = {
+      id: '',
+      title: guestSanitize.title,
+      firstName: guestSanitize.firstName,
+      lastName: guestSanitize.lastName,
+      email: guestSanitize.email,
+      companyName: guestSanitize.companyName,
+      typeOfVisit: guestSanitize.typeOfVisit,
+      location: guestSanitize.location,
+      validFrom: this.extractDate(guestSanitize.validFromDate, guestSanitize.validFromTime),
+      validUntil: this.extractDate(guestSanitize.validUntilDate, guestSanitize.validUntilTime),
+    };
 
-    const tValidFromDate = guestSanitize.validFromDate;
-    const tvalidUntilDate = guestSanitize.validUntilDate;
-
-    guestSanitize.validFromDate = this.extractDate(guestSanitize.validFromDate, guestSanitize.validFromTime);
-    guestSanitize.validFromTime = this.extractDate(tValidFromDate, guestSanitize.validFromTime);
-    guestSanitize.validUntilDate = this.extractDate(guestSanitize.validUntilDate, guestSanitize.validUntilTime);
-    guestSanitize.validUntilTime = this.extractDate(tvalidUntilDate, guestSanitize.validUntilTime);
-
-    return guestSanitize;
+    return guestA;
   }
 
-  private sanitizeValues(): GuestApiModel {
+  private sanitizeValues(): any {
     return this.formValidator.getSanitizedRawFormValues(this.guestFormComponent!.guestForm);
   }
 
-  private extractDate(date: string, time: string): string {
-    return date.concat('T', time, ':00.000Z');
+  private extractDate(date: string | Date, time: string): string {
+    if (date instanceof Date) {
+      // TODO: CHECKING THE TIME IS VALID
+      date.setHours(parseInt(time.slice(0, 2), 10));
+      date.setMinutes(parseInt(time.slice(3, 5), 10));
+
+      return date.toISOString();
+    }
+
+    return '';
   }
 }

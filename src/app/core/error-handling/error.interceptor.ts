@@ -17,12 +17,9 @@ export default class ErrorInterceptor implements HttpInterceptor {
         } else {
           // handle server-side error
           message = `Error Status: ${error.status} \n Message: ${error.message}`;
-          /**
-           * @todo Verify x-operation-id is received in headers object from backend when
-           * https://dth06.ibmgcloud.net/jira/browse/BKAACMGT-184 is implemented
-           */
-
-          if (error.headers && error.headers.has('x-operation-id')) {
+          if (error.status === 400) {
+            message = error.error.message;
+          } else if (error.headers && error.headers.has('x-operation-id')) {
             message = `${message} with Id: ${error.headers.get('x-operation-id')}`;
           }
         }

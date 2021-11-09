@@ -1,6 +1,8 @@
-<a mat-flat-button [disableRipple]="true" id="back-button" (click)="goToDashboard()">
-  <mat-icon aria-hidden="false" aria-label="Back to overview">chevron_left</mat-icon>
-  Zurück
-</a>
+<button mat-flat-button [disableRipple]="true" id="back-button" (click)="goToDashboard()">
+  <mat-icon aria-hidden="false" attr.aria-label="{{ 'guest.guest-add-component.back-button' | translate }}"
+    >chevron_left</mat-icon
+  >
+  {{ 'guest.guest-add-component.back-button' | translate }}
+</button>
 <hr />
 <app-guest-form (submitForm)="submitAddGuest()"></app-guest-form>

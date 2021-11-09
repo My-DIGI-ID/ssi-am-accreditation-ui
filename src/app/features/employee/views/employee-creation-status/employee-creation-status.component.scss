@@ -1,0 +1,50 @@
+// TODO: refactor ...
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 3.8125rem auto;
+  width: 48.75%;
+}
+
+button {
+  text-transform: uppercase;
+}
+
+#addEmployee {
+  margin: 0 auto;
+}
+
+#navToOverview {
+  margin: 1.5rem auto 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+li {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+ul li div {
+  display: flex;
+  flex-direction: row;
+
+  p {
+    margin: 0;
+  }
+}
+
+div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  p {
+    margin: 0;
+  }
+}

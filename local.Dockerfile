@@ -1,6 +1,7 @@
 FROM node:14.15.5-alpine3.10
 
 RUN apk add --no-cache --virtual  git
+RUN apk add --upgrade libssl1.1 libcrypto1.1 libgd libxml2 libcurl curl apk-tools libgcrypt
 WORKDIR /opt/ssi-am-accreditation-ui
 
 COPY package.json package.json

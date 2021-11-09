@@ -1,0 +1,151 @@
+<div id="welcome-container">
+  <div id="welcome-title">
+    {{ 'guest.guest-welcome-component.title' | translate }}
+  </div>
+  <div id="welcome-subtitle">
+    {{ 'guest.guest-welcome-component.subtitle-1' | translate }}<br />
+    {{ 'guest.guest-welcome-component.subtitle-2' | translate }}
+  </div>
+
+  <div *ngIf="isFirstStepActive" id="first-step">
+    <div class="step-counter">1/2</div>
+    <div class="step-title">
+      {{ 'guest.guest-welcome-component.first-step.title' | translate }}
+    </div>
+    <div id="first-step-items">
+      <div class="first-step-item space-right">
+        <div class="first-step-item-icon">
+          <mat-icon class="material-icons-outlined">smartphone</mat-icon>
+        </div>
+        <div class="first-step-item-title">
+          {{ 'guest.guest-welcome-component.first-step.item-1-title' | translate }}
+        </div>
+        <div class="first-step-item-description">
+          {{ 'guest.guest-welcome-component.first-step.item-1-description' | translate }}
+        </div>
+      </div>
+      <div class="first-step-item">
+        <div class="first-step-item-icon">
+          <mat-icon class="material-icons-outlined"> badge</mat-icon>
+        </div>
+        <div class="first-step-item-title">
+          {{ 'guest.guest-welcome-component.first-step.item-2-title' | translate }}
+        </div>
+        <div class="first-step-item-description">
+          {{ 'guest.guest-welcome-component.first-step.item-2-description' | translate }}
+        </div>
+      </div>
+      <div class="first-step-item space-around">
+        <div class="first-step-item-icon">
+          <mat-icon class="material-icons-outlined">account_balance_wallet</mat-icon>
+        </div>
+        <div class="first-step-item-title">
+          {{ 'guest.guest-welcome-component.first-step.item-3-title' | translate }}
+        </div>
+        <div class="first-step-item-description">
+          {{ 'guest.guest-welcome-component.first-step.item-3-description' | translate }}
+        </div>
+      </div>
+      <div class="first-step-item">
+        <div class="first-step-item-icon">
+          <mat-icon>fingerprint</mat-icon>
+        </div>
+        <div class="first-step-item-title">
+          {{ 'guest.guest-welcome-component.first-step.item-4-title' | translate }}
+        </div>
+        <div class="first-step-item-description">
+          {{ 'guest.guest-welcome-component.first-step.item-4-description' | translate }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isFirstStepActive" id="second-step">
+    <div class="step-counter">2/2</div>
+    <div class="step-title">
+      {{ 'guest.guest-welcome-component.second-step.title' | translate }}
+    </div>
+    <div id="second-step-list">
+      <div class="item">
+        <mat-icon class="material-icons-outlined">alarm</mat-icon>
+      </div>
+      <div class="item">
+        {{ 'guest.guest-welcome-component.second-step.benefits-1' | translate }}
+      </div>
+      <div class="item">
+        <mat-icon class="material-icons-outlined">badge</mat-icon>
+      </div>
+      <div class="item">
+        {{ 'guest.guest-welcome-component.second-step.benefits-2' | translate }}
+      </div>
+
+      <div class="item">
+        <mat-icon class="material-icons-outlined">topic</mat-icon>
+      </div>
+      <div class="item">
+        {{ 'guest.guest-welcome-component.second-step.benefits-3' | translate }}
+      </div>
+
+      <div class="item">
+        <mat-icon class="material-icons-outlined">park</mat-icon>
+      </div>
+      <div class="item">
+        {{ 'guest.guest-welcome-component.second-step.benefits-4' | translate }}
+      </div>
+
+      <div class="item">
+        <mat-icon class="material-icons-outlined">lock</mat-icon>
+      </div>
+      <div class="item">
+        {{ 'guest.guest-welcome-component.second-step.benefits-5' | translate }}
+      </div>
+
+      <div class="item">
+        <mat-icon class="material-icons-outlined">mobile_friendly</mat-icon>
+      </div>
+      <div class="item">
+        {{ 'guest.guest-welcome-component.second-step.benefits-6' | translate }}
+      </div>
+    </div>
+  </div>
+
+  <div id="nav-container">
+    <div id="circle-container">
+      <div class="circle" [ngClass]="isFirstStepActive ? 'dark-gray-fill' : 'light-gray-fill'"></div>
+      <div class="circle" [ngClass]="!isFirstStepActive ? 'dark-gray-fill' : 'light-gray-fill'"></div>
+    </div>
+    <mat-checkbox *ngIf="isFirstStepActive" color="primary" (change)="changeQRCodeVisibility($event.checked)">
+      {{ 'guest.guest-welcome-component.first-step.confirm-prerequisites' | translate }}
+    </mat-checkbox>
+    <button
+      *ngIf="isFirstStepActive"
+      mat-flat-button
+      [disabled]="!isConfirmCheckboxChecked"
+      [ngClass]="isConfirmCheckboxChecked ? 'button-primary' : 'button-primary disabled'"
+      (click)="nextStep()"
+    >
+      {{ 'guest.guest-welcome-component.first-step.next-button' | translate }}
+    </button>
+    <button
+      *ngIf="!isFirstStepActive"
+      color="primary"
+      mat-flat-button
+      class="button-primary"
+      (click)="goToAccreditation()"
+    >
+      {{ 'guest.guest-welcome-component.second-step.start-button' | translate }}
+    </button>
+  </div>
+  <hr />
+  <div class="support">
+    {{ 'guest.guest-welcome-component.faq.text' | translate }}
+    <a class="support-link">
+      {{ 'guest.guest-welcome-component.faq.link' | translate }}
+    </a>
+    <br />
+    {{ 'guest.guest-welcome-component.support.text' | translate }}
+    <a class="support-link">
+      {{ 'guest.guest-welcome-component.support.link' | translate }}
+    </a>
+  </div>
+</div>

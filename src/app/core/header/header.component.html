@@ -1,7 +1,14 @@
-<mat-toolbar role="heading">
-  <span>SSI Zugangsmanagement</span>
+<mat-toolbar role="banner">
+  <span> {{ 'header-component.company-name' | translate }}</span>
   <span class="spacer"></span>
   <p>{{ loggedInUser }}</p>
   <div class="avatar"></div>
-  <button type="button" *ngIf="loggedInUser" (click)="logout()">logout</button>
+  <button
+    attr.aria-label="{{ 'header-component.logout-button.aria-label' | translate }}"
+    type="button"
+    *ngIf="loggedInUser"
+    (click)="logout()"
+  >
+    {{ 'header-component.logout-button.title' | translate }}
+  </button>
 </mat-toolbar>

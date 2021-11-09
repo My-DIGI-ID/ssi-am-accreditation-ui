@@ -1,71 +1,83 @@
 <form [formGroup]="guestForm">
   <div class="details-row">
     <div class="title">
-      <div class="details-title">Gästeinformationen</div>
+      <h2 class="details-title">
+        {{ 'guest.guest-add-component.form.guest-details.title' | translate }}
+      </h2>
     </div>
     <div class="form">
       <div class="form-row">
         <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
-          <mat-label>Vorname</mat-label>
+          <mat-label>
+            {{ 'guest.guest-add-component.form.guest-details.field.first-name' | translate }}
+          </mat-label>
           <input matInput formControlName="firstName" id="firstName" type="text" maxlength="50" required />
           <mat-error *ngIf="guestForm.controls.firstName.hasError('maxLength')">
-            Vorname ist auf 50 Zeichen begrenzt
+            {{ 'guest.guest-add-component.form.error.max-length.first-name' | translate }}
           </mat-error>
           <mat-error *ngIf="guestForm.controls.firstName.hasError('required')">
-            Vorname ist <strong>erforderlich</strong>
+            {{ 'guest.guest-add-component.form.error.required.first-name' | translate }}
           </mat-error>
           <mat-error *ngIf="guestForm.controls.firstName.hasError('fieldContainsForbiddenCharacters')">
-            Vorname kann nur alphanumerische Zeichen sowie die folgenden Sonderzeichen enthalten: _ , . - &
+            {{ 'guest.guest-add-component.form.error.forbidden-characters.first-name' | translate }}
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
-          <mat-label>Nachname</mat-label>
+          <mat-label>
+            {{ 'guest.guest-add-component.form.guest-details.field.last-name' | translate }}
+          </mat-label>
           <input matInput formControlName="lastName" id="lastName" type="text" maxlength="50" required />
           <mat-error *ngIf="guestForm.controls.lastName.hasError('maxLength')">
-            Nachname ist auf 50 Zeichen begrenzt
+            {{ 'guest.guest-add-component.form.error.max-length.last-name' | translate }}
           </mat-error>
           <mat-error *ngIf="guestForm.controls.lastName.hasError('required')">
-            Nachname ist <strong>erforderlich</strong>
+            {{ 'guest.guest-add-component.form.error.required.last-name' | translate }}
           </mat-error>
           <mat-error *ngIf="guestForm.controls.lastName.hasError('fieldContainsForbiddenCharacters')">
-            Nachname kann nur alphanumerische Zeichen sowie die folgenden Sonderzeichen enthalten: _ , . - &
+            {{ 'guest.guest-add-component.form.error.forbidden-characters.last-name' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
       <div class="form-row">
         <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
-          <mat-label>Firma</mat-label>
-          <input matInput formControlName="companyName" id="companyName" type="text" maxlength="100" required />
+          <mat-label>
+            {{ 'guest.guest-add-component.form.guest-details.field.company-name' | translate }}
+          </mat-label>
+          <input matInput formControlName="companyName" id="companyName" type="text" maxlength="200" required />
           <mat-error *ngIf="guestForm.controls.companyName.hasError('maxLength')">
-            Firma ist auf 100 Zeichen begrenzt
+            {{ 'guest.guest-add-component.form.error.max-length.company-name' | translate }}
           </mat-error>
           <mat-error *ngIf="guestForm.controls.companyName.hasError('required')">
-            Firma ist <strong>erforderlich</strong>
+            {{ 'guest.guest-add-component.form.error.required.company-name' | translate }}
           </mat-error>
           <mat-error *ngIf="guestForm.controls.companyName.hasError('fieldContainsForbiddenCharacters')">
-            Firma kann nur alphanumerische Zeichen sowie die folgenden Sonderzeichen enthalten: _ , . - &
+            {{ 'guest.guest-add-component.form.error.forbidden-characters.company-name' | translate }}
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
-          <mat-label>Titel</mat-label>
+          <mat-label>
+            {{ 'guest.guest-add-component.form.guest-details.field.title' | translate }}
+          </mat-label>
           <input matInput formControlName="title" id="title" type="text" maxlength="50" />
           <mat-error *ngIf="guestForm.controls.title.hasError('maxLength')">
-            Titel ist auf 50 Zeichen begrenzt
+            {{ 'guest.guest-add-component.form.error.max-length.title' | translate }}
           </mat-error>
           <mat-error *ngIf="guestForm.controls.title.hasError('fieldContainsForbiddenCharacters')">
-            Titel kann nur alphanumerische Zeichen sowie die folgenden Sonderzeichen enthalten: _ , . - &
+            {{ 'guest.guest-add-component.form.error.forbidden-characters.title' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
       <div class="form-row">
         <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
-          <mat-label>E-Mail-Adresse</mat-label>
+          <mat-label>
+            {{ 'guest.guest-add-component.form.guest-details.field.email' | translate }}
+          </mat-label>
           <input matInput formControlName="email" id="email" type="text" required />
-          <mat-error *ngIf="!guestForm.controls.email.hasError('email')">
-            Bitte geben Sie eine gültige E-Mail Adresse an
+          <mat-error *ngIf="guestForm.controls.email.hasError('email')">
+            {{ 'guest.guest-add-component.form.error.format.email' | translate }}
           </mat-error>
           <mat-error *ngIf="guestForm.controls.email.hasError('required')">
-            Email ist <strong>erforderlich</strong>
+            {{ 'guest.guest-add-component.form.error.required.email' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
@@ -74,66 +86,146 @@
   <hr />
   <div class="details-row">
     <div class="title">
-      <div class="details-title">Besuchsinformationen</div>
+      <div class="details-title">
+        {{ 'guest.guest-add-component.form.visit-details.title' | translate }}
+      </div>
     </div>
     <div class="form">
       <div class="form-row">
         <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
-          <mat-label>Besuchsgrund</mat-label>
+          <mat-label>
+            {{ 'guest.guest-add-component.form.visit-details.field.type-of-visit' | translate }}
+          </mat-label>
           <input matInput formControlName="typeOfVisit" id="typeOfVisit" type="text" maxlength="50" required />
           <mat-error *ngIf="guestForm.controls.typeOfVisit.hasError('maxLength')">
-            Besuchsgrund ist auf 50 Zeichen begrenzt
+            {{ 'guest.guest-add-component.form.error.max-length.type-of-visit' | translate }}
           </mat-error>
           <mat-error *ngIf="guestForm.controls.typeOfVisit.hasError('required')">
-            Besuchsgrund ist <strong>erforderlich</strong>
+            {{ 'guest.guest-add-component.form.error.required.type-of-visit' | translate }}
           </mat-error>
           <mat-error *ngIf="guestForm.controls.typeOfVisit.hasError('fieldContainsForbiddenCharacters')">
-            Besuchsgrund kann nur alphanumerische Zeichen sowie die folgenden Sonderzeichen enthalten: _ , . - &
+            {{ 'guest.guest-add-component.form.error.forbidden-characters.type-of-visit' | translate }}
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
-          <mat-label>Ort / Gebäude</mat-label>
+          <mat-label>
+            {{ 'guest.guest-add-component.form.visit-details.field.location' | translate }}
+          </mat-label>
           <input matInput formControlName="location" id="location" type="text" maxlength="50" required />
           <mat-error *ngIf="guestForm.controls.location.hasError('maxLength')">
-            Ort / Gebäude ist auf 50 Zeichen begrenzt
+            {{ 'guest.guest-add-component.form.error.max-length.location' | translate }}
           </mat-error>
           <mat-error *ngIf="guestForm.controls.location.hasError('required')">
-            Ort / Gebäude ist <strong>erforderlich</strong>
+            {{ 'guest.guest-add-component.form.error.required.location' | translate }}
           </mat-error>
           <mat-error *ngIf="guestForm.controls.location.hasError('fieldContainsForbiddenCharacters')">
-            Ort / Gebäude kann nur alphanumerische Zeichen sowie die folgenden Sonderzeichen enthalten: _ , . - &
+            {{ 'guest.guest-add-component.form.error.forbidden-characters.location' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
       <div class="form-row">
         <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
-          <mat-label>Ankunftsdatum</mat-label>
-          <input matInput formControlName="validFromDate" id="validFromDate" type="date" required />
-          <mat-error *ngIf="guestForm.controls.validFromDate.hasError('required')">
-            Ankunftsdatum ist <strong>erforderlich</strong>
+          <mat-label>
+            {{ 'guest.guest-add-component.form.visit-details.field.valid-from-date' | translate }}
+          </mat-label>
+          <input
+            matInput
+            formControlName="validFromDate"
+            #validFromDateRef
+            [matDatepicker]="picker"
+            [min]="today"
+            placeholder="dd/mm/yyyy"
+            [errorStateMatcher]="matcher"
+            required
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error
+            *ngIf="
+              guestForm.controls.validFromDate.hasError('required') ||
+              guestForm.controls.validFromDate.hasError('isNotDateString')
+            "
+          >
+            {{ 'guest.guest-add-component.form.error.format.valid-from-date.invalid-and-required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="guestForm.controls.validFromDate.hasError('matDatepickerMin')">
+            {{ 'guest.guest-add-component.form.error.format.valid-from-date.past' | translate }}
           </mat-error>
         </mat-form-field>
+
         <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
-          <mat-label>Ankunftszeit</mat-label>
-          <input matInput formControlName="validFromTime" id="validFromTime" type="time" required />
+          <mat-label>
+            {{ 'guest.guest-add-component.form.visit-details.field.valid-from-time' | translate }}
+          </mat-label>
+          <input
+            matInput
+            formControlName="validFromTime"
+            #validFromTimeRef
+            id="validFromTime"
+            type="time"
+            [errorStateMatcher]="matcher"
+            required
+          />
           <mat-error *ngIf="guestForm.controls.validFromTime.hasError('required')">
-            Ankunftszeit ist <strong>erforderlich</strong>
+            {{ 'guest.guest-add-component.form.error.required.valid-from-time' | translate }}
+          </mat-error>
+          <mat-error *ngIf="guestForm.controls.validFromTime.hasError('invalidStartDate')">
+            {{ 'guest.guest-add-component.form.error.format.valid-from-time.invalid' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
       <div class="form-row">
         <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
-          <mat-label>Abreisedatum</mat-label>
-          <input matInput formControlName="validUntilDate" id="validUntilDate" type="date" required />
-          <mat-error *ngIf="guestForm.controls.validUntilDate.hasError('required')">
-            Abreisedatum ist <strong>erforderlich</strong>
+          <mat-label>
+            {{ 'guest.guest-add-component.form.visit-details.field.valid-until-date' | translate }}
+          </mat-label>
+          <input
+            matInput
+            formControlName="validUntilDate"
+            #validUntilDateRef
+            placeholder="dd/mm/yyyy"
+            [matDatepicker]="picker2"
+            [min]="today"
+            [errorStateMatcher]="matcher"
+            required
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+          <mat-error
+            *ngIf="
+              guestForm.controls.validUntilDate.hasError('required') ||
+              guestForm.controls.validUntilDate.hasError('isNotDateString')
+            "
+          >
+            {{ 'guest.guest-add-component.form.error.format.valid-until-date.invalid-and-required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="guestForm.controls.validUntilDate.hasError('matDatepickerMin')">
+            {{ 'guest.guest-add-component.form.error.format.valid-until-date.past' | translate }}
+          </mat-error>
+          <mat-error *ngIf="guestForm.controls.validUntilDate.hasError('invalidDataRange')">
+            {{ 'guest.guest-add-component.form.error.format.valid-until-date.invalid-date-range' | translate }}
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
-          <mat-label>Abreisezeit</mat-label>
-          <input matInput formControlName="validUntilTime" id="validUntilTime" type="time" required />
-          <mat-error *ngIf="guestForm.controls.validUntilTime.hasError('required')">
-            Abreisedatum ist <strong>erforderlich</strong>
+          <mat-label>
+            {{ 'guest.guest-add-component.form.visit-details.field.valid-until-time' | translate }}
+          </mat-label>
+          <input
+            matInput
+            formControlName="validUntilTime"
+            #validUntilTimeRef
+            id="validUntilTime"
+            type="time"
+            required
+            [errorStateMatcher]="matcher"
+          />
+          <mat-error
+            *ngIf="guestForm.controls.validUntilTime.hasError('required') && guestForm.controls.validUntilTime.touched"
+          >
+            {{ 'guest.guest-add-component.form.error.required.valid-until-time' | translate }}
+          </mat-error>
+          <mat-error *ngIf="guestForm.controls.validUntilTime.hasError('invalidDataRange')">
+            {{ 'guest.guest-add-component.form.error.format.valid-until-time.invalid-time-range' | translate }}
           </mat-error>
         </mat-form-field>
       </div>
@@ -141,6 +233,8 @@
   </div>
   <hr />
   <div class="button-container">
-    <button id="submit-button" [disabled]="guestForm.invalid" (click)="submit()">SENDEN</button>
+    <button id="submit-button" [disabled]="guestForm.invalid" (click)="submit()">
+      {{ 'guest.guest-add-component.form.button.submit' | translate }}
+    </button>
   </div>
 </form>

@@ -1,0 +1,21 @@
+<div class="confirmation-page">
+  <ng-container *ngIf="accreditationAccepted; else spinner">
+    <div class="circle-done">
+      <mat-icon>done</mat-icon>
+    </div>
+    <div class="title">
+      {{ 'guest.guest-accreditation-component.confirmation-component.title' | translate }}
+    </div>
+    <div class="description">
+      {{ 'guest.guest-accreditation-component.confirmation-component.description' | translate }}
+    </div>
+  </ng-container>
+  <ng-template #spinner>
+    <div class="circle-pending">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div class="title">
+      {{ 'guest.guest-accreditation-component.confirmation-component.spinner-title' | translate }}
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,41 @@
+<div class="accreditation">
+  <div class="progress-container">
+    <div class="progress"></div>
+    <div class="circle" [class.active]="activeStepNumber === 1 || stepOneDone">
+      <div class="circle-label">
+        <mat-icon [class.hide]="!stepOneDone">done</mat-icon>
+        <span [class.hide]="stepOneDone">1</span>
+      </div>
+      <div class="circle-caption">
+        {{ 'guest.guest-accreditation-component.circle-caption-1' | translate }}
+      </div>
+    </div>
+    <div class="circle" [class.active]="activeStepNumber === 2 || stepTwoDone">
+      <div class="circle-label">
+        <mat-icon [class.hide]="!stepTwoDone">done</mat-icon>
+        <span [class.hide]="stepTwoDone">2</span>
+      </div>
+      <div class="circle-caption">
+        {{ 'guest.guest-accreditation-component.circle-caption-2' | translate }}
+      </div>
+    </div>
+    <div class="circle" [class.active]="activeStepNumber === 3">
+      <div class="circle-label">
+        <span>3</span>
+      </div>
+      <div class="circle-caption">
+        {{ 'guest.guest-accreditation-component.circle-caption-3' | translate }}
+      </div>
+    </div>
+  </div>
+  <hr />
+  <app-verification *ngIf="activeStepNumber === 1" (qrCodeIsScanned)="onQRCodeIsScanned($event)"></app-verification>
+  <app-visit-and-guest-details
+    *ngIf="activeStepNumber === 2"
+    [guest]="guest"
+    (submitForm)="submitGuestDetails()"
+  ></app-visit-and-guest-details>
+  <ng-container *ngIf="activeStepNumber === 3">
+    <app-confirmation [accreditationAccepted]="accreditationAccepted"></app-confirmation>
+  </ng-container>
+</div>

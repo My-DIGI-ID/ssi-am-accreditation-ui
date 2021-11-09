@@ -1,0 +1,91 @@
+@import '../../../../../styles/variables';
+
+.title-line {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .title-buttons {
+    #add-employee-button {
+      height: 42px;
+      width: 247px;
+      border-radius: 6px;
+      color: $color-light-1;
+      text-transform: uppercase;
+    }
+  }
+}
+
+.table-header-row {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  .hide {
+    visibility: hidden;
+  }
+
+  .search-row {
+    display: flex;
+    flex-direction: row;
+    margin-top: 30px;
+    margin-bottom: 30px;
+
+    .input-field {
+      font-size: 18px;
+      border: none;
+      border-bottom: 1px solid $color-grey-3-opacity-50;
+      display: inline-block;
+      color: $color-grey-3;
+    }
+
+    .search-icon {
+      padding-left: 5px;
+      color: $color-grey-3;
+    }
+  }
+}
+
+table {
+  width: 88.8888888889vw;
+  margin: 0px auto 0 auto;
+
+  td {
+    color: $color-dark;
+    font-size: 16px;
+    font-weight: 100;
+
+    mat-icon {
+      color: $color-dark;
+      font-size: 16px;
+      padding-left: 7px;
+      transform: translateY(14%);
+      cursor: pointer;
+    }
+  }
+
+  th {
+    color: $color-grey-3;
+    font-size: 16px;
+    font-weight: 100;
+  }
+
+  tr:hover {
+    background-color: $color-grey-3-opacity-30;
+  }
+}
+
+#download-email-button {
+  cursor: pointer;
+}
+
+::ng-deep {
+  .mat-select {
+    margin-bottom: 10px !important;
+  }
+
+  .mat-paginator-page-size {
+    margin-top: 16px !important;
+  }
+}

@@ -115,6 +115,10 @@ export default class EmployeeFormComponent implements OnInit {
           this.formValidator.forbiddenCharactersString(),
         ],
       ],
+      firmReference: [
+        this.initialValue.firmReference,
+        [Validators.maxLength(50), this.formValidator.forbiddenCharactersString()],
+      ],
     });
   }
 
@@ -135,6 +139,7 @@ export default class EmployeeFormComponent implements OnInit {
       firmName: formValues.firmName,
       firmPostalCode: formValues.firmPostalCode,
       firmStreet: formValues.firmStreet,
+      firmReference: formValues.firmReference,
     };
   }
 }

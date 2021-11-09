@@ -29,7 +29,7 @@ export default class AuthenticationInterceptor implements HttpInterceptor {
       request = request.clone({ headers: request.headers.set('Authorization', `${TOKEN}`) });
     }
 
-    if (!req.headers.has('Content-Type')) {
+    if (!req.headers.has('Content-Type') && !(req.body instanceof FormData)) {
       request = request.clone({ headers: request.headers.set('Content-Type', 'application/json') });
     }
 

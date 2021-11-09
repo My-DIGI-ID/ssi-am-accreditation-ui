@@ -1,0 +1,16 @@
+<div class="gdrp-part">
+  <mat-checkbox color="primary" (change)="onGDPRChecked($event.checked)"> </mat-checkbox>
+  <div class="gdpr-text">
+    {{ 'guest.guest-accreditation-component.verification-component.gdpr.text' | translate }}
+    <a class="link"> {{ 'guest.guest-accreditation-component.verification-component.gdpr.link' | translate }} </a>.
+  </div>
+</div>
+
+<div class="qr-code-container">
+  <div class="qr-code">
+    <div aria-labelledby="qr-code-title" [class.hidden]="!showQRCode" #qrcode></div>
+  </div>
+  <div id="qr-code-title">
+    {{ 'guest.guest-accreditation-component.verification-component.scan-caption' | translate }}
+  </div>
+</div>

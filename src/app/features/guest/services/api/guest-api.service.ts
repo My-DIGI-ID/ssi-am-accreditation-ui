@@ -1,9 +1,10 @@
+/* eslint-disable class-methods-use-this */
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import GuestAccreditionModel from 'features/guest/models/guest-accreditation.model';
-import GuestExtendedApiModel from 'features/guest/models/guest-extended-api.model';
 import { Observable } from 'rxjs';
-import ConfigInitService from 'src/app/init/config-init.service';
+import GuestAccreditionModel from '../../models/guest-accreditation.model';
+import GuestExtendedApiModel from '../../models/guest-extended-api.model';
+import ConfigInitService from '../../../../init/config-init.service';
 import GuestApiModel from '../../models/guest-api.model';
 
 @Injectable({
@@ -20,7 +21,7 @@ export default class GuestApiService {
 
   public getGuests(): Observable<GuestApiModel[]> {
     return this.http.get<GuestApiModel[]>(
-      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/party/guest/`
+      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/party/guest/`
     );
   }
 
@@ -28,29 +29,15 @@ export default class GuestApiService {
     return this.http.get<GuestAccreditionModel>(
       `${
         this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
-      }/accreditation/guest/private/${accreditationId}`
+      }/api/v2/accreditation/guest/private/${accreditationId}`
     );
   }
 
   public saveGuest(guest: GuestApiModel): Observable<GuestApiModel> {
     return this.http.post<GuestApiModel>(
-      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/party/guest/`,
+      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/party/guest/`,
       guest,
       this.httpHeader
-    );
-  }
-
-  public saveCSV(formdata: FormData): Observable<any> {
-    this.httpHeader.headers.set('Content-Type', 'multipart/form-data');
-    // check endpoint
-    return this.http.post<FormData>(
-      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/party/guest/csv`,
-      formdata,
-      {
-        headers: this.httpHeader.headers,
-        observe: 'events',
-        reportProgress: true,
-      }
     );
   }
 
@@ -58,9 +45,33 @@ export default class GuestApiService {
     return this.http.patch<GuestAccreditionModel>(
       `${
         this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
-      }/accreditation/guest/append/guest-proprietary-information/${accreditationId}`,
+      }/api/v2/accreditation/guest/append/guest-proprietary-information/${accreditationId}`,
       guest,
       this.httpHeader
     );
+  }
+
+  public getInvitationEmail(guestId: string): Observable<any> {
+    return this.http.post<any>(
+      `${
+        this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
+      }/api/v2/accreditation/guest/initiate/invitation-email/${guestId}`,
+      {}
+    );
+  }
+
+  public deleteGuest(guestId: string): Observable<any> {
+    return Observable.create((observer) => {
+      // if (this.error) {
+      //   observer.error(new Error(..))
+      // } else {
+      //   observer.next(this.data);
+      // }
+      observer.complete(guestId);
+    });
+    // return this.http.post<any>(
+    //   `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/deleteurl/${guestId}`,
+    //   {}
+    // );
   }
 }

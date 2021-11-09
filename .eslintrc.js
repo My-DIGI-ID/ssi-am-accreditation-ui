@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
+    jasmine: true,
   },
   overrides: [
     {
@@ -18,6 +19,9 @@ module.exports = {
       rules: {
         // to prevent eslint complain about initializing service in constructor and using it at later stage
         'no-unused-vars': 'off',
+        'no-shadow': 'off',
+        'import/prefer-default-export': 'off',
+        '@typescript-eslint/no-shadow': ['error'],
         '@typescript-eslint/no-unused-vars': [2, { args: 'after-used', argsIgnorePattern: '^_' }],
         'prettier/prettier': 'error',
         // to prevent eslint complain about initializing service in constructor with empty constructor body

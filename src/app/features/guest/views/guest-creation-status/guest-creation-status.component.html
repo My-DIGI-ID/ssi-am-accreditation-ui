@@ -5,11 +5,11 @@
   <div class="status-description">
     {{ getStatusDescription() }}
   </div>
-  <a mat-flat-button [disableRipple]="true" id="add-another-guest" (click)="goToAddGuest()">
-    <mat-icon aria-hidden="false" aria-label="Add another guest">add</mat-icon>
-    Weiteren Gast hinzufügen
+  <a mat-flat-button id="add-another-guest" (click)="goToAddGuest()">
+    <mat-icon>add</mat-icon>
+    {{ 'guest.guest-creation-status-component.button.add-another-guest' | translate }}
   </a>
   <button type="button" mat-flat-button color="primary" id="navigate-to-dashboard" (click)="goToDashboard()">
-    Zurück zur Übersicht
+    {{ 'guest.guest-creation-status-component.button.back-to-the-overview' | translate }}
   </button>
 </div>

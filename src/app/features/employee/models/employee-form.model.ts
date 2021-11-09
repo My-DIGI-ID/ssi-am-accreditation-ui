@@ -26,4 +26,6 @@ export default class EmployeeFormModel {
   firmPostalCode?: string;
 
   firmCity?: string;
+
+  firmReference?: string;
 }

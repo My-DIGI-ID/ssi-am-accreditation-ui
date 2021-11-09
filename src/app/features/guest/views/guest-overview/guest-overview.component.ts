@@ -1,9 +1,12 @@
 /* eslint-disable class-methods-use-this */
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import GuestStoreService from '../../services/stores/guest-store.service';
-import GuestApiModel from '../../models/guest-api.model';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../../../../shared/dialog/dialog.component';
+import GuestDashboardViewModel from '../../models/guest-dashboard-view.model';
+import GuestDashboardStoreService from '../../services/stores/guest-dashboard-store.service';
 
 @Component({
   selector: 'app-guest-overview',
@@ -11,8 +14,10 @@ import GuestApiModel from '../../models/guest-api.model';
   styleUrls: ['./guest-overview.component.scss'],
 })
 export default class GuestOverviewComponent implements OnInit {
-  @ViewChild(MatSort, { static: true })
+  @ViewChild(MatSort, { static: false })
   public sort: MatSort;
+
+  public viewData$: Observable<GuestDashboardViewModel[]> | undefined;
 
   public dataSource: any = [];
 
@@ -27,24 +32,50 @@ export default class GuestOverviewComponent implements OnInit {
     'edit',
   ];
 
-  public constructor(private readonly guestStoreService: GuestStoreService) {}
+  public dialogConfirmRef;
+
+  public constructor(private dialog: MatDialog, private readonly store: GuestDashboardStoreService) {}
 
   public ngOnInit(): void {
-    try {
-      this.guestStoreService.getGuests().subscribe((guests: GuestApiModel[]) => {
-        this.dataSource = new MatTableDataSource(guests);
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    this.subscribe();
+    this.init();
+  }
+
+  private init(): void {
+    this.store.init();
+  }
+
+  private subscribe(): void {
+    this.viewData$ = this.store.connect();
+
+    this.viewData$.subscribe((guests: GuestDashboardViewModel[]) => {
+      this.dataSource = new MatTableDataSource(guests);
+      this.dataSource.sort = this.sort;
+    });
   }
 
   public editGuest(id: string): void {
     console.log(id);
   }
 
-  public deleteGuest(id: string): void {
-    console.log(id);
+  public openDeleteGuestDialog(id: string): void {
+    this.dialogConfirmRef = this.dialog.open(DialogComponent, {
+      width: '30%',
+      data: {
+        guestId: id,
+        title: 'Löschen',
+        discription:
+          'Sind Sie sicher, dass sie diesen digitalen Gästeausweis löschen wollen? Dies kann nicht Rückgängig gemacht werden.',
+        firstButtonText: 'ABBRECHEN',
+        secondButtonText: 'GAST LÖSCHEN',
+      },
+      autoFocus: false,
+    });
+    this.dialogConfirmRef.afterClosed().subscribe((affirmativeAction) => {
+      if (affirmativeAction === 'second') {
+        this.deleteGuest(id);
+      }
+    });
   }
 
   public downloadEmail(id: string): void {
@@ -52,7 +83,7 @@ export default class GuestOverviewComponent implements OnInit {
   }
 
   public dynamicDownloadJson(id) {
-    this.guestStoreService.downloadEmail(id).subscribe((res) => {
+    this.store.downloadEmail(id).subscribe((res) => {
       this.dyanmicDownloadByHtmlTag({
         fileName: 'email-invitation.html',
         text: JSON.stringify(res.invitationEmail).replace(/\\/g, ''),
@@ -70,5 +101,13 @@ export default class GuestOverviewComponent implements OnInit {
 
     const event = new MouseEvent('click');
     element.dispatchEvent(event);
+  }
+
+  private deleteGuest(id: string): void {
+    try {
+      this.store.deleteGuest(id);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

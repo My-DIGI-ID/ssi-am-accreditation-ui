@@ -1,0 +1,180 @@
+@import '../../../../../../styles/variables';
+
+#welcome-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  color: $color-dark;
+
+  #welcome-title {
+    font-size: $font-size-48;
+    font-weight: $font-weight-100;
+  }
+
+  #welcome-subtitle {
+    font-size: $font-size-16;
+    font-weight: $font-weight-500;
+  }
+}
+
+#first-step {
+  margin-top: 66px;
+  margin-bottom: 85px;
+
+  #first-step-items {
+    margin-top: 73px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    .first-step-item {
+      width: 208px;
+
+      .first-step-item-icon {
+        mat-icon {
+          height: 60px;
+          width: 55px;
+          font-size: $font-size-56;
+          text-align: center;
+          color: $color-grey-2;
+          font-weight: $font-weight-100;
+        }
+      }
+
+      .first-step-item-title {
+        margin-top: 26px;
+        margin-bottom: 13px;
+        font-size: $font-size-16;
+        font-weight: $font-weight-500;
+      }
+
+      .first-step-item-description {
+        font-size: $font-size-12;
+        font-weight: $font-weight-300;
+      }
+    }
+
+    .space-around {
+      margin-left: 52px;
+      margin-right: 52px;
+    }
+
+    .space-right {
+      margin-right: 52px;
+    }
+  }
+}
+
+.step-title {
+  margin-top: 5px;
+  font-size: $font-size-20;
+  font-weight: $font-weight-300;
+}
+
+.step-counter {
+  font-size: $font-size-30;
+  font-weight: $font-weight-100;
+}
+
+#second-step {
+  margin-top: 66px;
+
+  #second-step-list {
+    display: flex;
+    flex-wrap: wrap;
+    width: 544px;
+    margin: auto;
+    margin-top: 44px;
+
+    .item {
+      width: 100%;
+      font-size: $font-size-12;
+      font-weight: $font-weight-300;
+    }
+  }
+
+  #second-step-list > div {
+    margin-bottom: 20px;
+  }
+
+  #second-step-list > div:nth-child(odd) {
+    flex: 10%;
+  }
+
+  #second-step-list > div:nth-child(even) {
+    flex: 90%;
+    text-align: left;
+  }
+}
+
+#nav-container {
+  margin-top: 62px;
+
+  #circle-container {
+    display: flex;
+    justify-content: center;
+    gap: 1%;
+    margin-bottom: 22px;
+  }
+
+  .circle {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+
+  .dark-gray-fill {
+    background-color: $color-grey-2;
+  }
+
+  .light-gray-fill {
+    background-color: $color-grey-2-opacity-30 !important;
+  }
+
+  .button-primary {
+    height: 42px;
+    width: 153px;
+    color: white;
+    background-color: $color-blue;
+    border: 1px solid $color-blue;
+    border-radius: 6px;
+  }
+
+  .disabled {
+    background-color: $color-grey-2-opacity-30 !important;
+    border: 1px solid $color-grey-2-opacity-30 !important;
+    cursor: not-allowed;
+  }
+
+  mat-checkbox {
+    display: block;
+    color: $color-grey-2;
+    margin: 10px 0 10px 0;
+  }
+
+  ::ng-deep {
+    .mat-checkbox-checked .mat-checkbox-ripple .mat-ripple-element {
+      background-color: $color-grey-2-opacity-30 !important;
+    }
+
+    .mat-checkbox-checked .mat-checkbox-background,
+    .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+      background-color: $color-blue !important;
+    }
+  }
+}
+
+hr {
+  margin: 2.5rem 0 1.5rem 0;
+  color: $color-grey-2-opacity-30;
+}
+
+.support {
+  font-size: $font-size-12;
+  font-style: italic;
+  font-weight: $font-weight-100;
+
+  .support-link {
+    color: $color-blue;
+  }
+}

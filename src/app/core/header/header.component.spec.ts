@@ -1,40 +1,36 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatToolbarHarness } from '@angular/material/toolbar/testing';
-
-import HeaderComponent from './header.component';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
-import AuthenticationService from '../authentication/authentication.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import HeaderComponent from './header.component';
+
 const keycloakServiceMock = {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   logout: (): void => {},
-  loadUserProfile: (): Promise<KeycloakProfile> => {
-    return new Promise((resolve) => {
+  loadUserProfile: (): Promise<KeycloakProfile> =>
+    new Promise((resolve) => {
       resolve({});
-    });
-  },
-  getUsername: (): string => {
-    return 'mock keycloak user';
-  },
-  isLoggedIn: (): Promise<boolean> => {
-    return new Promise((resolve) => {
+    }),
+  getUsername: (): string => 'mock keycloak user',
+  isLoggedIn: (): Promise<boolean> =>
+    new Promise((resolve) => {
       resolve(true);
-    });
-  },
+    }),
 };
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let loader: HarnessLoader;
-  let authService: AuthenticationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [HeaderComponent],
-      imports: [MatToolbarModule],
-      providers: [{ provide: KeycloakService, useValue: keycloakServiceMock }],
+      imports: [MatToolbarModule, TranslateModule.forRoot()],
+      providers: [{ provide: KeycloakService, useValue: keycloakServiceMock }, TranslateService],
     }).compileComponents();
   });
 
@@ -42,11 +38,11 @@ describe('HeaderComponent', () => {
     fixture = TestBed.createComponent(HeaderComponent);
     loader = TestbedHarnessEnvironment.loader(fixture);
     component = fixture.componentInstance;
-    authService = TestBed.inject(AuthenticationService);
+
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('instance should be successfully created', () => {
     expect(component).toBeTruthy();
   });
 
@@ -56,12 +52,18 @@ describe('HeaderComponent', () => {
     expect(toolbar.length).toBe(1);
   });
 
-  it('should set loggedInUser', async () => {
-    spyOn(authService, 'loadUserProfile').and.returnValue(Promise.resolve({}));
-    fixture.whenStable().then(() => {
-      // call the getUserName method to get the user name
-      const userName = spyOn(authService, 'getUserName');
-      expect(component.loggedInUser).toBe('mock keycloak user');
-    });
+  it('if I call the logout function the keycloak service is also called', async () => {
+    const keycloakServiceLogoutSpy = spyOn(keycloakServiceMock, 'logout').and.callThrough();
+    component.logout();
+
+    expect(keycloakServiceLogoutSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('if I call the loadUserProfile function the keycloak service is also called', async () => {
+    const keycloakServiceLoadUserProfileSpy = spyOn(keycloakServiceMock, 'loadUserProfile').and.callThrough();
+    // eslint-disable-next-line dot-notation
+    component['loadUserProfile']();
+
+    expect(keycloakServiceLoadUserProfileSpy).toHaveBeenCalledTimes(1);
   });
 });

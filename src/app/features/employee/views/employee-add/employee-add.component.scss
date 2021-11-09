@@ -1,0 +1,44 @@
+@import '../../../../../styles/variables';
+
+.upload-container {
+  width: 100%;
+  display: flex;
+
+  .column {
+    width: 33.33%;
+
+    p {
+      margin-right: 10vw;
+    }
+
+    .link {
+      color: $color-blue;
+    }
+  }
+}
+
+hr {
+  margin: 40px auto 24px;
+}
+
+#back-button {
+  color: $color-blue;
+}
+
+@media screen and (max-width: 600px) {
+  .upload-container {
+    flex-direction: column;
+
+    .column,
+    app-upload {
+      width: 100%;
+    }
+
+    .column {
+      p {
+        margin-right: 0;
+        text-align: center;
+      }
+    }
+  }
+}
