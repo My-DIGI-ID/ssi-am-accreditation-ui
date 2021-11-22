@@ -1,5 +1,7 @@
 /* eslint-disable class-methods-use-this */
+import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -34,28 +36,29 @@ export default class GuestOverviewComponent implements OnInit {
 
   public dialogConfirmRef;
 
-  public constructor(private dialog: MatDialog, private readonly store: GuestDashboardStoreService) {}
+  public constructor(
+    private dialog: MatDialog,
+    private readonly store: GuestDashboardStoreService,
+    private readonly router: Router,
+    private readonly translate: TranslateService
+  ) {}
 
   public ngOnInit(): void {
     this.subscribe();
     this.init();
   }
 
-  private init(): void {
-    this.store.init();
+  public goToAddGuest(): void {
+    this.router.navigateByUrl('guest/add');
   }
 
-  private subscribe(): void {
-    this.viewData$ = this.store.connect();
-
-    this.viewData$.subscribe((guests: GuestDashboardViewModel[]) => {
-      this.dataSource = new MatTableDataSource(guests);
-      this.dataSource.sort = this.sort;
-    });
+  public goToEditGuest(id: string): void {
+    this.router.navigate(['guest/', id, 'edit']);
   }
 
-  public editGuest(id: string): void {
-    console.log(id);
+  public reloadPage() {
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
   }
 
   public openDeleteGuestDialog(id: string): void {
@@ -63,11 +66,10 @@ export default class GuestOverviewComponent implements OnInit {
       width: '30%',
       data: {
         guestId: id,
-        title: 'Löschen',
-        discription:
-          'Sind Sie sicher, dass sie diesen digitalen Gästeausweis löschen wollen? Dies kann nicht Rückgängig gemacht werden.',
-        firstButtonText: 'ABBRECHEN',
-        secondButtonText: 'GAST LÖSCHEN',
+        title: this.translate.instant('guest.guest-overview-component.delete-guest-dialog.title'),
+        discription: this.translate.instant('guest.guest-overview-component.delete-guest-dialog.discription'),
+        firstButtonText: this.translate.instant('guest.guest-overview-component.delete-guest-dialog.firstButtonText'),
+        secondButtonText: this.translate.instant('guest.guest-overview-component.delete-guest-dialog.secondButtonText'),
       },
       autoFocus: false,
     });
@@ -79,33 +81,63 @@ export default class GuestOverviewComponent implements OnInit {
   }
 
   public downloadEmail(id: string): void {
-    this.dynamicDownloadJson(id);
+    this.dynamicDownload(id);
   }
 
-  public dynamicDownloadJson(id) {
-    this.store.downloadEmail(id).subscribe((res) => {
-      this.dyanmicDownloadByHtmlTag({
-        fileName: 'email-invitation.html',
-        text: JSON.stringify(res.invitationEmail).replace(/\\/g, ''),
-      });
+  public dynamicDownload(id) {
+    this.store.downloadEmail(id).subscribe((payload: any) => {
+      const file = new Blob([payload.body], { type: 'messages/rfc822' });
+      const filename = `${id}-invitation.eml`;
+      this.dynamicDownloadEMLFile(file, filename);
     });
   }
 
-  private dyanmicDownloadByHtmlTag(arg: { fileName: string; text: string }) {
+  private dynamicDownloadEMLFile(file: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(file);
     const link = document.createElement('a');
-    const element = link;
 
-    const fileType = arg.fileName.indexOf('.json') > -1 ? 'text/json' : 'text/plain';
-    element.setAttribute('href', `data:${fileType};charset=utf-8,${encodeURIComponent(arg.text)}`);
-    element.setAttribute('download', arg.fileName);
+    link.href = url;
+    link.download = filename;
 
-    const event = new MouseEvent('click');
-    element.dispatchEvent(event);
+    link.click();
+    window.URL.revokeObjectURL(url);
+
+    this.reloadPage();
   }
 
-  private deleteGuest(id: string): void {
+  private init(): void {
+    this.store.init();
+  }
+
+  private subscribe(): void {
+    this.viewData$ = this.store.connect();
+
+    this.viewData$.subscribe((guests: GuestDashboardViewModel[]) => {
+      this.dataSource = new MatTableDataSource(this.statusTransalation(guests));
+      this.dataSource.sort = this.sort;
+    });
+  }
+
+  private statusTransalation(guests: GuestDashboardViewModel[]): GuestDashboardViewModel[] {
+    guests.map((guest) => {
+      if (guest.status === 'ACCEPTED') {
+        // eslint-disable-next-line no-param-reassign
+        guest.status = this.translate.instant('guest.guest-overview-component.guest-status.accepted');
+      } else if (guest.status === 'PENDING') {
+        // eslint-disable-next-line no-param-reassign
+        guest.status = this.translate.instant('guest.guest-overview-component.guest-status.pending');
+      } else if (guest.status === 'CANCELLED') {
+        // eslint-disable-next-line no-param-reassign
+        guest.status = this.translate.instant('guest.guest-overview-component.guest-status.cancelled');
+      }
+      return guest;
+    });
+    return guests;
+  }
+
+  private deleteGuest(accreditationId: string): void {
     try {
-      this.store.deleteGuest(id);
+      this.store.deleteGuest(accreditationId);
     } catch (error) {
       console.log(error);
     }

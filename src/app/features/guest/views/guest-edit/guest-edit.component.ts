@@ -1,37 +1,51 @@
 /* eslint-disable class-methods-use-this */
-import { Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import GuestFormModel from '../../models/guest-form.model';
-import { GuestFormComponent } from '../../forms/guest-form/guest-form.component';
+import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ApplicationURL } from '../../../../shared/utilities/application-url';
-import FormValidator from '../../../../shared/utilities/form-validator';
+import { GuestFormComponent } from '../../forms/guest-form/guest-form.component';
 import GuestApiModel from '../../models/guest-api.model';
 import GuestDashboardStoreService from '../../services/stores/guest-dashboard-store.service';
+import FormValidator from '../../../../shared/utilities/form-validator';
+import GuestFormModel from '../../models/guest-form.model';
 
 @Component({
-  selector: 'app-guest-add',
-  templateUrl: './guest-add.component.html',
-  styleUrls: ['./guest-add.component.scss'],
-  providers: [FormValidator],
+  selector: 'app-guest-edit',
+  templateUrl: './guest-edit.component.html',
+  styleUrls: ['./guest-edit.component.scss'],
 })
-export default class GuestAddComponent {
+export class GuestEditComponent implements AfterViewInit {
   @ViewChild(GuestFormComponent)
   private readonly guestFormComponent?: GuestFormComponent;
 
   public constructor(
-    public readonly formValidator: FormValidator,
+    private readonly activatedRoute: ActivatedRoute,
     private readonly guestDashboardStoreService: GuestDashboardStoreService,
+    public readonly formValidator: FormValidator,
     private readonly router: Router
   ) {}
 
-  public submitAddGuest(): void {
+  public ngAfterViewInit(): void {
+    try {
+      const guestPartyId = this.activatedRoute.snapshot.params.id;
+      this.guestDashboardStoreService.getGuestByPartId(guestPartyId).subscribe((guest) => {
+        this.guestFormComponent!.populateHotelForm(guest);
+        this.guestFormComponent!.disableFields();
+      });
+    } catch (error) {
+      console.log(error);
+      // TODO-td: error handling
+    }
+  }
+
+  public submitEditGuest(): void {
     if (this.guestFormComponent?.guestForm.valid) {
       const guest = this.createGuestApiDTO();
 
       try {
-        this.guestDashboardStoreService.addGuest(guest);
+        this.guestDashboardStoreService.editGuest(guest);
       } catch (error) {
         console.log(error);
+        // TODO-tb: error handling
       }
     }
   }
@@ -44,16 +58,16 @@ export default class GuestAddComponent {
     const guestSanitize: GuestFormModel = this.sanitizeValues();
 
     const guestA: GuestApiModel = {
-      id: '',
+      id: this.activatedRoute.snapshot.params.id,
       title: guestSanitize.title,
       firstName: guestSanitize.firstName,
       lastName: guestSanitize.lastName,
-      primaryPhoneNumber: guestSanitize.primaryPhone,
-      secondaryPhoneNumber: guestSanitize.secondaryPhone,
       email: guestSanitize.email,
       companyName: guestSanitize.companyName,
       typeOfVisit: guestSanitize.typeOfVisit,
       location: guestSanitize.location,
+      primaryPhoneNumber: guestSanitize.primaryPhone,
+      secondaryPhoneNumber: guestSanitize.secondaryPhone,
       validFrom: this.extractDate(guestSanitize.validFromDate, guestSanitize.validFromTime),
       validUntil: this.extractDate(guestSanitize.validUntilDate, guestSanitize.validUntilTime),
     };

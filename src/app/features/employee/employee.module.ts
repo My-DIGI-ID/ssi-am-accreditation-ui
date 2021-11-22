@@ -1,7 +1,8 @@
 import { TranslatePipe, TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
@@ -42,6 +43,7 @@ import { EmployeeOverviewComponent } from './views/employee-overview/employee-ov
     CommonModule,
     EmployeeRoutingModule,
     ReactiveFormsModule,
+    FormsModule,
     MatTabsModule,
     MatTableModule,
     MatPaginatorModule,
@@ -51,6 +53,7 @@ import { EmployeeOverviewComponent } from './views/employee-overview/employee-ov
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatToolbarModule,
     TranslateModule,
     SharedModule,
   ],

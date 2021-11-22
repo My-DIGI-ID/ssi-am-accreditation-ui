@@ -3,12 +3,14 @@
   <span class="spacer"></span>
   <p>{{ loggedInUser }}</p>
   <div class="avatar"></div>
-  <button
+  <mat-icon
+    class="account-icon"
     attr.aria-label="{{ 'header-component.logout-button.aria-label' | translate }}"
     type="button"
-    *ngIf="loggedInUser"
-    (click)="logout()"
+    >account_circle</mat-icon
   >
-    {{ 'header-component.logout-button.title' | translate }}
-  </button>
+  <p class="logout" *ngIf="loggedInUser" (click)="logout()">
+    <mat-icon class="logout-icon">logout</mat-icon>
+    <span class="logout-text"> {{ 'header-component.logout' | translate }}</span>
+  </p>
 </mat-toolbar>

@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { Component, Output, EventEmitter, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import GuestStoreService from '../../../../services/stores/guest-store.service';

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
@@ -65,8 +66,10 @@ describe('GuestOverviewComponent', () => {
   let component: GuestOverviewComponent;
   let fixture: ComponentFixture<GuestOverviewComponent>;
   let dialog: MatDialog;
+  let router: Router;
 
   beforeEach(async () => {
+    const routerMock = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
     await TestBed.configureTestingModule({
       declarations: [GuestOverviewComponent],
       imports: [
@@ -88,6 +91,10 @@ describe('GuestOverviewComponent', () => {
           useClass: StoreMock,
         },
         { provide: MatDialog, useValue: { open: () => of({ guestId: 1 }) } },
+        {
+          provide: Router,
+          useValue: routerMock,
+        },
       ],
     }).compileComponents();
   });
@@ -95,8 +102,10 @@ describe('GuestOverviewComponent', () => {
   beforeEach(() => {
     store = TestBed.inject(GuestDashboardStoreService);
     dialog = TestBed.inject(MatDialog);
+    router = TestBed.inject(Router);
     fixture = TestBed.createComponent(GuestOverviewComponent);
     component = fixture.componentInstance;
+    spyOn(component, 'reloadPage').and.returnValue();
 
     fixture.detectChanges();
   });
@@ -121,11 +130,10 @@ describe('GuestOverviewComponent', () => {
   });
 
   it('If I call editGuest function the log should be called', () => {
-    console.log = jasmine.createSpy('log');
-    component.editGuest('id-123');
+    component.goToEditGuest('id-123');
     fixture.detectChanges();
 
-    expect(console.log).toHaveBeenCalledWith('id-123');
+    expect(router.navigate).toHaveBeenCalledWith(['guest/', 'id-123', 'edit']);
   });
 
   it('If I call the openDeleteGuestDialog function the dialog shpuld be open', () => {
@@ -136,5 +144,17 @@ describe('GuestOverviewComponent', () => {
     fixture.detectChanges();
 
     expect(dialog.open).toHaveBeenCalled();
+  });
+
+  it('if openDeleteGuestDialog function is called and affirmativeAction is second, deleteGuest should be called', () => {
+    spyOn(dialog, 'open').and.returnValue({ afterClosed: () => of('second') } as MatDialogRef<
+      typeof GuestOverviewComponent
+    >);
+
+    const deleteGuestSpy = spyOn<any>(component, 'deleteGuest');
+
+    component.openDeleteGuestDialog('id-1');
+
+    expect(deleteGuestSpy).toHaveBeenCalledTimes(1);
   });
 });

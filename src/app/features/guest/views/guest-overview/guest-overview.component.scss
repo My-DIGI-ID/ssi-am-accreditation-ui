@@ -2,7 +2,7 @@
 
 .row {
   display: flex;
-  width: 80vw;
+  width: 100%;
   justify-content: space-between;
 }
 
@@ -16,20 +16,19 @@ a#addGuest:focus {
 }
 
 mat-table {
-  width: 90%;
+  width: 100%;
   margin-top: 30px;
   font-weight: $font-weight-100;
 
   mat-cell {
-    background-color: $color-light-1;
     color: $color-dark;
     font-size: $font-size-16;
-    border-bottom-color: $color-grey-2;
+    border-bottom-color: $color-dark;
   }
 
   mat-header-cell {
     color: $color-grey-3;
-    border-bottom-color: $color-grey-2;
+    border-bottom-color: $color-dark;
     font-size: $font-size-16;
     font-weight: $font-weight-100;
   }
@@ -47,7 +46,13 @@ mat-table {
     cursor: pointer;
   }
 
-  mat-cell {
-    background-color: $color-grey-4;
+  ::ng-deep .last-column {
+    display: flex !important;
+    justify-content: flex-end !important;
+  }
+
+  mat-row,
+  mat-header-row {
+    border-bottom-color: $color-dark;
   }
 }

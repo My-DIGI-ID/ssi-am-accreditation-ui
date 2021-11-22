@@ -26,8 +26,12 @@ export default class EmployeeDashboardStoreService extends AbstractStore<Employe
       map(([employees, accreditation]) =>
         employees.map((employee) => ({
           ...employee,
-          status: accreditation.find((a) => a.referenceNumber === employee.referenceNumber)?.status
-            ? accreditation.find((a) => a.referenceNumber === employee.referenceNumber)?.status
+          status: accreditation.find((aEmployee) => aEmployee.referenceNumber === employee.referenceNumber)?.status
+            ? accreditation.find((aEmployee) => aEmployee.referenceNumber === employee.referenceNumber)?.status
+            : '',
+          accreditationId: accreditation.find((aEmployee) => aEmployee.referenceNumber === employee.referenceNumber)
+            ?.accreditationId
+            ? accreditation.find((aEmployee) => aEmployee.referenceNumber === employee.referenceNumber)?.accreditationId
             : '',
         }))
       )
@@ -54,6 +58,8 @@ export default class EmployeeDashboardStoreService extends AbstractStore<Employe
 
   private mapEmployeeApiModelToViewModel(apiModel: EmployeeApiModel[]): EmployeeDashboardViewModel[] {
     return apiModel.map((employee) => ({
+      accreditationId: '',
+      employeeId: employee.employeeId,
       referenceNumber: employee.id,
       firstName: employee.firstName,
       lastName: employee.lastName,
@@ -67,6 +73,8 @@ export default class EmployeeDashboardStoreService extends AbstractStore<Employe
     apiModel: EmployeeAccreditationApiModel[]
   ): EmployeeDashboardViewModel[] {
     return apiModel.map((accreditation) => ({
+      accreditationId: accreditation.id,
+      employeeId: accreditation.employee.employeeId,
       referenceNumber: accreditation.employee.id,
       firstName: accreditation.employee.firstName,
       lastName: accreditation.employee.lastName,
@@ -74,5 +82,32 @@ export default class EmployeeDashboardStoreService extends AbstractStore<Employe
       location: '',
       status: accreditation.status,
     }));
+  }
+
+  private update(data: EmployeeAccreditationApiModel): EmployeeDashboardViewModel[] {
+    const dataD: EmployeeDashboardViewModel = {
+      accreditationId: data.id,
+      employeeId: data.employee.employeeId,
+      referenceNumber: data.employee.id,
+      firstName: data.employee.firstName,
+      lastName: data.employee.lastName,
+      creationDate: '',
+      location: `${data.employee.companyCity}, ${data.employee.companyStreet}`,
+      status: data.status,
+    };
+    this.storeSubject.value.push(dataD);
+
+    return this.storeSubject.value;
+  }
+
+  public deleteEmployee(employeeId: string): void {
+    this.employeeApiService.deleteEmployee(employeeId).subscribe(
+      (response: EmployeeAccreditationApiModel) => {
+        this.storeSubject.next(this.update(response));
+      },
+      (error: any) => {
+        console.error('Error', error);
+      }
+    );
   }
 }

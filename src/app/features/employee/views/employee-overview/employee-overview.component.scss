@@ -6,43 +6,65 @@
   justify-content: space-between;
 
   .title-buttons {
+    #mitarbeiter-verifizierung {
+      color: $color-blue;
+      margin-right: 24px;
+    }
+
     #add-employee-button {
-      height: 42px;
-      width: 247px;
+      padding: 5px 20px 5px 20px;
+      color: $color-white !important;
       border-radius: 6px;
       color: $color-light-1;
       text-transform: uppercase;
+      background-color: $color-blue;
     }
   }
 }
 
 .table-header-row {
-  margin-top: 20px;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
 
-  .hide {
-    visibility: hidden;
-  }
-
   .search-row {
-    display: flex;
     flex-direction: row;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 
-    .input-field {
-      font-size: 18px;
-      border: none;
-      border-bottom: 1px solid $color-grey-3-opacity-50;
-      display: inline-block;
-      color: $color-grey-3;
+    .mat-toolbar-row {
+      padding: 0 5px;
+    }
+
+    .search-icon-toolbar {
+      background-color: $color-white;
+      &.hidden {
+        display: none;
+      }
+    }
+
+    .search-block {
+      width: 0%;
+      right: 0;
+      background: $color-white;
+      &.hidden {
+        display: none;
+      }
+
+      .search-control {
+        flex: 1;
+        font-size: 1rem;
+        border: 0;
+        outline: none;
+        padding-left: 10px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid $color-light-1;
+      }
     }
 
     .search-icon {
       padding-left: 5px;
-      color: $color-grey-3;
+      color: $color-grey-2 !important;
     }
   }
 }
@@ -74,10 +96,16 @@ table {
   tr:hover {
     background-color: $color-grey-3-opacity-30;
   }
-}
 
-#download-email-button {
-  cursor: pointer;
+  #download-email-button {
+    margin-right: 17px;
+  }
+
+  .mat-icon-action {
+    font-size: 22px !important;
+    color: $color-grey-2 !important;
+    cursor: pointer;
+  }
 }
 
 ::ng-deep {
@@ -88,4 +116,8 @@ table {
   .mat-paginator-page-size {
     margin-top: 16px !important;
   }
+}
+
+.hidden {
+  display: none;
 }

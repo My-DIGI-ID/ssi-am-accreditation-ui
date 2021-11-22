@@ -14,4 +14,6 @@ export default class GuestDashboardViewModel {
   location: string;
 
   status?: string;
+
+  accreditationId?: string;
 }

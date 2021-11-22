@@ -6,7 +6,9 @@ import GuestOverviewComponent from './views/guest-overview/guest-overview.compon
 import GuestWelcomeComponent from './views/public/guest-welcome/guest-welcome.component';
 import { GuestAccreditationComponent } from './views/public/guest-accreditation/guest-accreditation.component';
 import { GuestCreationStatusComponent } from './views/guest-creation-status/guest-creation-status.component';
+import { GuestEditComponent } from './views/guest-edit/guest-edit.component';
 
+// TODO-td: using APPLICATION URL enum
 const routes: Routes = [
   {
     path: '',
@@ -30,6 +32,12 @@ const routes: Routes = [
   {
     path: 'add',
     component: GuestAddComponent,
+    canActivate: [AuthenticationGuard],
+    data: { roles: ['employee'] },
+  },
+  {
+    path: ':id/edit',
+    component: GuestEditComponent,
     canActivate: [AuthenticationGuard],
     data: { roles: ['employee'] },
   },

@@ -12,4 +12,8 @@ export default class EmployeeAccreditationApiModel {
   invitationEmail!: string;
 
   invitationQrCode!: string;
+
+  invitedAt?: string;
+
+  invitedBy?: string;
 }

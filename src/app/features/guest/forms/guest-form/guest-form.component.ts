@@ -1,9 +1,8 @@
-/* eslint-disable max-classes-per-file */
 /* eslint-disable class-methods-use-this */
-/* eslint-disable import/prefer-default-export */
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, EventEmitter, Output } from '@angular/core';
-import MyErrorStateMatcher from 'src/app/core/error-handling/error-state-matcher';
+import GuestFormModel from '../../models/guest-form.model';
+import MyErrorStateMatcher from '../../../../core/error-handling/error-state-matcher';
 import FormValidator from '../../../../shared/utilities/form-validator';
 
 @Component({
@@ -22,12 +21,45 @@ export class GuestFormComponent {
 
   public matcher = new MyErrorStateMatcher();
 
+  public editMode = false;
+
   public constructor(private readonly formBuilder: FormBuilder, private readonly formValidator: FormValidator) {
     this.guestForm = this.createGuestForm();
   }
 
   public submit(): void {
     this.submitForm.emit();
+  }
+
+  public populateHotelForm(guest: GuestFormModel): void {
+    this.editMode = true;
+    this.guestForm.markAllAsTouched();
+    this.guestForm.patchValue(
+      {
+        firstName: guest.firstName,
+        lastName: guest.lastName,
+        companyName: guest.companyName,
+        title: guest.title,
+        primaryPhone: guest.primaryPhone,
+        secondaryPhone: guest.secondaryPhone,
+        email: guest.email,
+        typeOfVisit: guest.typeOfVisit,
+        location: guest.location,
+        validFromTime: this.getTimeFromIsoString(guest.validFromDate),
+        validUntilTime: this.getTimeFromIsoString(guest.validUntilTime),
+        issuedBy: guest.issuedBy,
+      },
+      { emitEvent: true }
+    );
+
+    this.guestForm.get('validFromDate')!.patchValue(this.extractDateFromIsoString(guest.validFromDate));
+    this.guestForm.get('validUntilDate')!.patchValue(this.extractDateFromIsoString(guest.validUntilDate));
+  }
+
+  public disableFields(): void {
+    this.guestForm.get('companyName')!.disable();
+    this.guestForm.get('email')!.disable();
+    this.guestForm.get('issuedBy')!.disable();
   }
 
   private createGuestForm(): FormGroup {
@@ -61,6 +93,15 @@ export class GuestFormComponent {
           ],
         ],
         title: ['', [Validators.maxLength(50), this.formValidator.forbiddenCharactersString()]],
+        primaryPhone: [
+          '',
+          [
+            Validators.required,
+            this.formValidator.requiredNoWhitespaceFill(),
+            this.formValidator.forbiddenCharactersPhone(),
+          ],
+        ],
+        secondaryPhone: ['', [this.formValidator.forbiddenCharactersPhone()]],
         email: [
           '',
           [
@@ -92,6 +133,7 @@ export class GuestFormComponent {
         validFromTime: ['', [Validators.required]],
         validUntilDate: ['', [Validators.required, this.formValidator.validDateString()]],
         validUntilTime: ['', [Validators.required]],
+        issuedBy: [''],
       },
       {
         validator: [
@@ -99,5 +141,17 @@ export class GuestFormComponent {
         ],
       }
     );
+  }
+
+  private extractDateFromIsoString(date: string): Date {
+    return new Date(date);
+  }
+
+  private getTimeFromIsoString(isoString: string): string {
+    const inputDateTime = new Date(isoString);
+    const min = (inputDateTime.getMinutes() < 10 ? '0' : '') + inputDateTime.getMinutes();
+    const hour = (inputDateTime.getHours() < 10 ? '0' : '') + inputDateTime.getHours();
+
+    return `${hour}:${min}`;
   }
 }

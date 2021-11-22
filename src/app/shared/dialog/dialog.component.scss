@@ -23,15 +23,14 @@
   }
 
   #dialog-first-button {
-    width: 116px;
-    margin-right: 7px;
+    margin-right: 17px;
     background-color: $color-white;
     border-color: $color-white;
     color: $color-blue;
   }
 
   #dialog-second-button {
-    width: 134px;
+    padding: 0 15px 0 15px;
     background-color: $color-blue;
     border-color: $color-blue;
     color: $color-white;

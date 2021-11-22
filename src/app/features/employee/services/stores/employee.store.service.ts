@@ -36,6 +36,7 @@ export default class EmployeeStoreService extends AbstractStore<EmployeeViewMode
     newEmployeeApiModel.secondaryPhoneNumber = employeeFormModel.secondaryPhone;
     newEmployeeApiModel.employeeState = employeeFormModel.employeeStatus;
     newEmployeeApiModel.companyReference = employeeFormModel.firmReference;
+    newEmployeeApiModel.employeeId = employeeFormModel.employeeId;
     this.addEmployee(newEmployeeApiModel);
   }
 

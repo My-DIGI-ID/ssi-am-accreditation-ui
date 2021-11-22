@@ -1,11 +1,14 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { DialogComponent } from '../../../../shared/dialog/dialog.component';
 import EmployeeDashboardViewModel from '../../models/employee-dashboard-view.model';
 import EmployeeDashboardStoreService from '../../services/stores/employee-dashboard.store.service';
 
@@ -21,17 +24,12 @@ export class EmployeeOverviewComponent implements OnInit, OnDestroy, AfterViewIn
   @ViewChild(MatSort, { static: true })
   private sort!: MatSort;
 
+  @ViewChild('searchBar')
+  public searchBar: ElementRef;
+
   public dataSource = new MatTableDataSource<EmployeeDashboardViewModel>();
 
-  public displayedColumns: string[] = [
-    'referenceNumber',
-    'firstName',
-    'lastName',
-    'location',
-    'status',
-    'downloadEmail',
-    'actionMenu',
-  ];
+  public displayedColumns: string[] = ['referenceNumber', 'firstName', 'lastName', 'location', 'status', 'actionMenu'];
 
   public activeTab: number = 0;
 
@@ -50,13 +48,31 @@ export class EmployeeOverviewComponent implements OnInit, OnDestroy, AfterViewIn
 
   public dataSourceLength!: number;
 
-  public constructor(private readonly router: Router, private readonly store: EmployeeDashboardStoreService) {}
+  public searchText = '';
+
+  public hideSearchRow: boolean = false;
+
+  public dialogConfirmRef;
+
+  public constructor(
+    private readonly router: Router,
+    private readonly store: EmployeeDashboardStoreService,
+    private dialog: MatDialog,
+    private readonly translate: TranslateService
+  ) {}
 
   public ngOnInit(): void {
-    this.subscribe();
     this.init();
+    this.subscribe();
+  }
 
-    this.refreshPage();
+  public openSearch() {
+    this.hideSearchRow = true;
+  }
+
+  public searchClose() {
+    this.searchText = '';
+    this.hideSearchRow = false;
   }
 
   public ngAfterViewInit(): void {
@@ -88,11 +104,38 @@ export class EmployeeOverviewComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   public downloadEmployeeEmailInvitation(id: string): void {
-    this.dynamicDownloadJson(id);
+    this.dynamicDownload(id);
+  }
+
+  public openDeleteEmployeeDialog(accreditationId: string): void {
+    this.dialogConfirmRef = this.dialog.open(DialogComponent, {
+      width: '40%',
+      data: {
+        title: this.translate.instant('employee.employee-overview-component.delete-employee-dialog.title'),
+        discription: this.translate.instant('employee.employee-overview-component.delete-employee-dialog.discription'),
+        firstButtonText: this.translate.instant(
+          'employee.employee-overview-component.delete-employee-dialog.firstButtonText'
+        ),
+        secondButtonText: this.translate.instant(
+          'employee.employee-overview-component.delete-employee-dialog.secondButtonText'
+        ),
+      },
+      autoFocus: false,
+    });
+    this.dialogConfirmRef.afterClosed().subscribe((affirmativeAction) => {
+      if (affirmativeAction === 'second') {
+        this.revokeEmployee(accreditationId);
+      }
+    });
+  }
+
+  private revokeEmployee(accreditationId: string): void {
+    this.store.deleteEmployee(accreditationId);
   }
 
   public ngOnDestroy(): void {
     this.searchValue = '';
+    this.store.reset();
   }
 
   private init(): void {
@@ -163,24 +206,29 @@ export class EmployeeOverviewComponent implements OnInit, OnDestroy, AfterViewIn
     this.dataSource.sort = this.sort;
   }
 
-  private dynamicDownloadJson(id) {
-    this.store.downloadEmail(id).subscribe((res) => {
-      this.dyanmicDownloadByHtmlTag({
-        fileName: 'email-invitation.html',
-        text: JSON.stringify(res.invitationEmail).replace(/\\/g, ''),
-      });
+  private dynamicDownload(id: string): void {
+    this.store.downloadEmail(id).subscribe((payload: any) => {
+      const file = new Blob([payload.body], { type: 'messages/rfc822' });
+      const filename = `${id}-invitation.eml`;
+      this.dynamicDownloadEMLFile(file, filename);
     });
   }
 
-  private dyanmicDownloadByHtmlTag(arg: { fileName: string; text: string }) {
+  private dynamicDownloadEMLFile(file: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(file);
     const link = document.createElement('a');
-    const element = link;
 
-    const fileType = arg.fileName.indexOf('.json') > -1 ? 'text/json' : 'text/plain';
-    element.setAttribute('href', `data:${fileType};charset=utf-8,${encodeURIComponent(arg.text)}`);
-    element.setAttribute('download', arg.fileName);
+    link.href = url;
+    link.download = filename;
 
-    const event = new MouseEvent('click');
-    element.dispatchEvent(event);
+    link.click();
+    window.URL.revokeObjectURL(url);
+
+    this.reloadPage();
+  }
+
+  public reloadPage() {
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
   }
 }

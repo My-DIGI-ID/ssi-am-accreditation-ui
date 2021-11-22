@@ -1,5 +1,4 @@
 /* eslint-disable class-methods-use-this */
-/* eslint-disable import/prefer-default-export */
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { take } from 'rxjs/operators';
@@ -80,7 +79,7 @@ export class GuestAccreditationComponent implements OnInit {
 
   private getGuestDTO(id: string): void {
     try {
-      this.guestStoreService.getGuestById(id).subscribe((guest_: GuestAccreditionModel) => {
+      this.guestStoreService.getGuestByAccreditationId(id).subscribe((guest_: GuestAccreditionModel) => {
         this.guest = guest_.guest;
       });
     } catch (error) {

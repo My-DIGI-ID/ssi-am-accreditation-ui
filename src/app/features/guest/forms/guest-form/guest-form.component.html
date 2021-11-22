@@ -70,6 +70,29 @@
       <div class="form-row">
         <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
           <mat-label>
+            {{ 'guest.guest-add-component.form.guest-details.field.primary-phone' | translate }}
+          </mat-label>
+          <input matInput formControlName="primaryPhone" id="primaryPhone" type="tel" required />
+          <mat-error *ngIf="guestForm.controls.primaryPhone.hasError('required')">
+            {{ 'guest.guest-add-component.form.error.required.primary-phone' | translate }}
+          </mat-error>
+          <mat-error *ngIf="guestForm.controls.primaryPhone.hasError('fieldContainsForbiddenCharacters')">
+            {{ 'guest.guest-add-component.form.error.forbidden-characters.primary-phone' | translate }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
+          <mat-label>
+            {{ 'guest.guest-add-component.form.guest-details.field.secondary-phone' | translate }}
+          </mat-label>
+          <input matInput formControlName="secondaryPhone" id="secondaryPhone" type="tel" />
+          <mat-error *ngIf="guestForm.controls.secondaryPhone.hasError('fieldContainsForbiddenCharacters')">
+            {{ 'guest.guest-add-component.form.error.forbidden-characters.secondary-phone' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
+          <mat-label>
             {{ 'guest.guest-add-component.form.guest-details.field.email' | translate }}
           </mat-label>
           <input matInput formControlName="email" id="email" type="text" required />
@@ -227,6 +250,14 @@
           <mat-error *ngIf="guestForm.controls.validUntilTime.hasError('invalidDataRange')">
             {{ 'guest.guest-add-component.form.error.format.valid-until-time.invalid-time-range' | translate }}
           </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="form-row" *ngIf="editMode">
+        <mat-form-field appearance="fill" floatLabel="always" class="form-row-item">
+          <mat-label>
+            {{ 'guest.guest-add-component.form.visit-details.field.issued-by' | translate }}
+          </mat-label>
+          <input matInput formControlName="issuedBy" id="issuedBy" type="text" />
         </mat-form-field>
       </div>
     </div>

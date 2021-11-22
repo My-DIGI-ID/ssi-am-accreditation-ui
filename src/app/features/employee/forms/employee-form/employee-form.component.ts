@@ -1,8 +1,8 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EmployeeStatus } from 'features/employee/enums/employee-status.enum';
-import { IEmployeeStatus } from 'features/employee/interfaces/employee-status.interface';
-import EmployeeFormModel from 'features/employee/models/employee-form.model';
+import { IEmployeeStatus } from '../../interfaces/employee-status.interface';
+import EmployeeFormModel from '../../models/employee-form.model';
 import FormValidator from '../../../../shared/utilities/form-validator';
 
 @Component({
@@ -19,12 +19,25 @@ export default class EmployeeFormComponent implements OnInit {
   public employeeFormGroup: FormGroup;
 
   public readonly employeeStatuses: Array<IEmployeeStatus> = [
-    { value: 'INTERNAL', viewValue: EmployeeStatus.internal },
-    { value: 'EXTERNAL', viewValue: EmployeeStatus.external },
-    { value: 'SERVICE PROVIDER', viewValue: EmployeeStatus.serviceProvider },
+    {
+      value: 'INTERNAL',
+      viewValue: this.translate.instant('employee.employee-add-component.form.employee-status-enum.internal'),
+    },
+    {
+      value: 'EXTERNAL',
+      viewValue: this.translate.instant('employee.employee-add-component.form.employee-status-enum.external'),
+    },
+    {
+      value: 'SERVICE PROVIDER',
+      viewValue: this.translate.instant('employee.employee-add-component.form.employee-status-enum.service-provider'),
+    },
   ];
 
-  public constructor(private readonly formBuilder: FormBuilder, private readonly formValidator: FormValidator) {}
+  public constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly formValidator: FormValidator,
+    private readonly translate: TranslateService
+  ) {}
 
   public ngOnInit(): void {
     this.employeeFormGroup = this.initEmployeeForm();

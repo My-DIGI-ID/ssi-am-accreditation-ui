@@ -50,17 +50,30 @@ export default class EmployeeApiService {
   }
 
   public getInvitationEmail(employeeId: string): Observable<any> {
-    return this.http.post<any>(
+    return this.http.post<Blob>(
       `${
         this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
       }/api/v2/accreditation/employee/initiate/invitation-email/${employeeId}`,
-      {}
+      null,
+      {
+        responseType: <any>'text',
+        observe: 'response',
+      }
     );
   }
 
   public getEmployeesAccredtitation(): Observable<any> {
     return this.http.get<EmployeeApiModel>(
       `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/accreditation/employee`
+    );
+  }
+
+  public deleteEmployee(employeeId: string): Observable<any> {
+    return this.http.patch(
+      `${
+        this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
+      }/api/v2/accreditation/employee/revoke/${employeeId}`,
+      {}
     );
   }
 }

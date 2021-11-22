@@ -17,7 +17,7 @@ export default class GuestApiService {
     }),
   };
 
-  constructor(private readonly http: HttpClient, private readonly configServie: ConfigInitService) {}
+  public constructor(private readonly http: HttpClient, private readonly configServie: ConfigInitService) {}
 
   public getGuests(): Observable<GuestApiModel[]> {
     return this.http.get<GuestApiModel[]>(
@@ -25,11 +25,31 @@ export default class GuestApiService {
     );
   }
 
-  public getGuestById(accreditationId: string): Observable<GuestAccreditionModel> {
-    return this.http.get<GuestAccreditionModel>(
+  public getGuestByAccreditationId(accreditationId: string): Observable<GuestAccreditionModel> {
+    return this.http.get<any>(
       `${
         this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
       }/api/v2/accreditation/guest/private/${accreditationId}`
+    );
+  }
+
+  public getGuestByPartId(guestId: string): Observable<GuestAccreditionModel> {
+    return this.http.get<GuestAccreditionModel>(
+      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/party/guest/${guestId}`
+    );
+  }
+
+  public getGuestsAccredititation(): Observable<GuestAccreditionModel[]> {
+    return this.http.get<GuestAccreditionModel[]>(
+      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/accreditation/guest/`
+    );
+  }
+
+  public editGuest(guest: GuestApiModel): Observable<GuestApiModel> {
+    return this.http.put<GuestApiModel>(
+      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/party/guest/${guest.id}`,
+      guest,
+      this.httpHeader
     );
   }
 
@@ -52,26 +72,31 @@ export default class GuestApiService {
   }
 
   public getInvitationEmail(guestId: string): Observable<any> {
-    return this.http.post<any>(
+    return this.http.post<Blob>(
       `${
         this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
       }/api/v2/accreditation/guest/initiate/invitation-email/${guestId}`,
-      {}
+      null,
+      {
+        responseType: <any>'text',
+        observe: 'response',
+      }
     );
   }
 
-  public deleteGuest(guestId: string): Observable<any> {
-    return Observable.create((observer) => {
-      // if (this.error) {
-      //   observer.error(new Error(..))
-      // } else {
-      //   observer.next(this.data);
-      // }
-      observer.complete(guestId);
-    });
-    // return this.http.post<any>(
-    //   `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/v2/deleteurl/${guestId}`,
-    //   {}
-    // );
+  public deleteGuest(accreditationId: string): Observable<any> {
+    // TODO
+    if (accreditationId === '') {
+      return Observable.create((observer) => {
+        observer.complete('');
+      });
+    }
+
+    return this.http.patch<any>(
+      `${
+        this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
+      }/api/v2/accreditation/guest/revoke/${accreditationId}`,
+      {}
+    );
   }
 }

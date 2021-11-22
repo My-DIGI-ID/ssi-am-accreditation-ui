@@ -1,5 +1,4 @@
 /* eslint-disable class-methods-use-this */
-/* eslint-disable no-param-reassign */
 import { Injectable } from '@angular/core';
 import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
 
@@ -62,6 +61,7 @@ export default class FormValidator {
   private sanitizeRawFormValues(rawFormValues: any): any {
     Object.keys(rawFormValues).forEach((key) => {
       if (typeof rawFormValues[key] === 'string') {
+        // eslint-disable-next-line no-param-reassign
         rawFormValues[key] = this.sanitizeFormStringValue(rawFormValues[key]);
       } else if (Array.isArray(rawFormValues[key])) {
         rawFormValues[key].forEach((element: any) => this.sanitizeRawFormValues(element));

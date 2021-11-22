@@ -44,6 +44,7 @@ describe('VisitAndGuestDetailsComponent', () => {
   });
 
   it(`if I call the submit function, the submitForm's emit function should be also called`, () => {
+    // eslint-disable-next-line dot-notation
     const submitEmitterSpy = spyOn(component['submitForm'], 'emit');
     component.guestForm.get('firstName')!.setValue('abc');
     component.guestForm.get('lastName')!.setValue('abc');

@@ -3,10 +3,38 @@
 mat-toolbar.mat-toolbar-single-row {
   padding: 0 $off-grid-spacing;
   height: 80px;
-  color: $color-grey-5;
-  background-color: $color-light-1;
+  border: 0;
+  background-color: $color-white;
+  box-shadow: 0 3px 4px 0 $color-grey-4-opacity-30;
+  font-size: 16px;
+  color: $color-black;
 }
 
 .spacer {
   flex: 1 1 auto;
+}
+
+.account-icon {
+  display: flex;
+  align-items: center;
+  margin-left: 30px;
+  background-color: $color-grey-2;
+  color: $color-white;
+  border-radius: 50%;
+}
+
+.logout {
+  margin-left: 50px;
+  color: $color-blue;
+  cursor: pointer;
+}
+
+.logout-icon {
+  transform: translateY(24%);
+  margin-right: 10px;
+}
+
+.logout-text {
+  font-size: 14px;
+  font-weight: 600;
 }

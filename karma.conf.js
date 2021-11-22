@@ -35,6 +35,30 @@ module.exports = function (config) {
           type: 'text-summary',
         },
       ],
+      check: {
+        emitWarning: false,
+        global: {
+          // overall code base
+          statements: 60,
+          branches: 60,
+          functions: 60,
+          lines: 60,
+          excludes: ['foo/bar/**/*.js'],
+        },
+        each: {
+          // per file
+          statements: 60,
+          branches: 60,
+          functions: 60,
+          lines: 60,
+          excludes: ['other/directory/**/*.js'],
+          overrides: {
+            'baz/component/**/*.js': {
+              statements: 98,
+            },
+          },
+        },
+      },
     },
     reporters: ['progress', 'kjhtml'],
     port: 9876,

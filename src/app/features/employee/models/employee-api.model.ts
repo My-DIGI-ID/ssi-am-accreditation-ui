@@ -25,7 +25,7 @@ export default class EmployeeApiModel {
 
   position?: string;
 
-  employeeId!: string;
+  employeeId?: string;
 
   companyName?: string;
 

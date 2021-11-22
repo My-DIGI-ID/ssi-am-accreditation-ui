@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 export enum ApplicationURL {
   Login = 'login',
   Employee = 'employee',

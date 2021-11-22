@@ -1,5 +1,4 @@
 /* eslint-disable class-methods-use-this */
-/* eslint-disable import/prefer-default-export */
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'guestDisplayPipe' })

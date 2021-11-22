@@ -1,3 +1,6 @@
+import { FormsModule } from '@angular/forms';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -14,6 +17,8 @@ import EmployeeDashboardStoreService from '../../services/stores/employee-dashbo
 
 class StoreMock {
   init = jasmine.createSpy();
+
+  reset = jasmine.createSpy();
 
   connect = jasmine.createSpy().and.returnValue(
     of([
@@ -52,6 +57,8 @@ class StoreMock {
     })
   );
 
+  deleteEmployee = jasmine.createSpy().and.returnValue(of({ mock: 'mockData' }));
+
   dispatch = jasmine.createSpy();
 }
 
@@ -60,6 +67,7 @@ describe('EmployeeOverviewComponent', () => {
   let fixture: ComponentFixture<EmployeeOverviewComponent>;
   let store: EmployeeDashboardStoreService;
   let router: Router;
+  let dialog: MatDialog;
 
   beforeEach(async () => {
     const routerMock = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
@@ -68,10 +76,13 @@ describe('EmployeeOverviewComponent', () => {
       imports: [
         RouterTestingModule,
         HttpClientTestingModule,
+        FormsModule,
+        MatDialogModule,
         MatIconModule,
         MatPaginatorModule,
         MatTabsModule,
         MatTableModule,
+        MatToolbarModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
       ],
@@ -85,6 +96,7 @@ describe('EmployeeOverviewComponent', () => {
           provide: Router,
           useValue: routerMock,
         },
+        { provide: MatDialog, useValue: { open: () => of({ title: 'Revoke Employee' }) } },
       ],
     }).compileComponents();
   });
@@ -92,8 +104,10 @@ describe('EmployeeOverviewComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EmployeeOverviewComponent);
     component = fixture.componentInstance;
+    dialog = TestBed.inject(MatDialog);
     router = TestBed.inject(Router);
     store = TestBed.inject(EmployeeDashboardStoreService);
+    spyOn(component, 'reloadPage').and.returnValue();
 
     fixture.detectChanges();
   });
@@ -186,12 +200,12 @@ describe('EmployeeOverviewComponent', () => {
     expect(component.activeTab).toEqual(2);
   });
 
-  it('if I call the downloadEmployeeEmailInvitation function, the dynamicDownloadJson function should be called', () => {
-    const dynamicDownloadJsonSpy = spyOn<any>(component, 'dynamicDownloadJson');
+  it('if I call the downloadEmployeeEmailInvitation function, the dynamicDownload function should be called', () => {
+    const dynamicDownloadSpy = spyOn<any>(component, 'dynamicDownload');
     component.downloadEmployeeEmailInvitation('123-id');
     fixture.detectChanges();
 
-    expect(dynamicDownloadJsonSpy).toHaveBeenCalled();
+    expect(dynamicDownloadSpy).toHaveBeenCalled();
   });
 
   it(`if I call the 'go to employee detail' method with '123' parameter, I should be taken to the the employee detail page with the correct parameter`, () => {
@@ -206,11 +220,62 @@ describe('EmployeeOverviewComponent', () => {
     expect(router.navigateByUrl).toHaveBeenCalledWith('employee/add-employee');
   });
 
-  it('If I call the dynamicDownloadJson function, the EmployeeDashboardStoreService should be called', () => {
+  it('If I call the dynamicDownload function, the EmployeeDashboardStoreService should be called', () => {
     // eslint-disable-next-line dot-notation
-    component['dynamicDownloadJson']('id-123');
+    component['dynamicDownload']('id-123');
     fixture.detectChanges();
 
     expect(store.downloadEmail).toHaveBeenCalled();
+  });
+
+  it('If I call the openDeleteEmployeeDialog function the dialog should be open', () => {
+    spyOn(dialog, 'open').and.returnValue({ afterClosed: () => of('second') } as MatDialogRef<
+      typeof EmployeeOverviewComponent
+    >);
+    component.openDeleteEmployeeDialog('id-1');
+    fixture.detectChanges();
+
+    expect(dialog.open).toHaveBeenCalled();
+  });
+
+  it(`If I close the 'deleteEmployeeDialog' via second button, the 'deleteEmployee' store function should be called`, () => {
+    spyOn(dialog, 'open').and.returnValue({ afterClosed: () => of('second') } as MatDialogRef<
+      typeof EmployeeOverviewComponent
+    >);
+    component.openDeleteEmployeeDialog('id-1');
+    fixture.detectChanges();
+
+    expect(store.deleteEmployee).toHaveBeenCalled();
+  });
+
+  it(`If I close the 'deleteEmployeeDialog' via first button, the 'deleteEmployee' store function should not be called`, () => {
+    spyOn(dialog, 'open').and.returnValue({ afterClosed: () => of('first') } as MatDialogRef<
+      typeof EmployeeOverviewComponent
+    >);
+    component.openDeleteEmployeeDialog('id-1');
+    fixture.detectChanges();
+
+    expect(store.deleteEmployee).not.toHaveBeenCalled();
+  });
+
+  it(`if I call the 'openSearch' function, the 'hideSearchRow' value should be true`, () => {
+    component.openSearch();
+    fixture.detectChanges();
+
+    expect(component.hideSearchRow).toEqual(true);
+  });
+
+  it(`if I call the 'searchClose' function, the 'searchText' value should be empty`, () => {
+    component.searchClose();
+    fixture.detectChanges();
+
+    expect(component.searchText).toEqual('');
+  });
+
+  it(`if I call the 'searchClose' function, the 'hideSearchRow' value should be false`, () => {
+    component.searchClose();
+    fixture.detectChanges();
+
+    expect(component.hideSearchRow).toEqual(false);
   });
 });

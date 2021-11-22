@@ -26,6 +26,7 @@ import { ConfirmationComponent } from './views/public/guest-accreditation/confir
 import { GuestFormComponent } from './forms/guest-form/guest-form.component';
 import { GuestCreationStatusComponent } from './views/guest-creation-status/guest-creation-status.component';
 import { GuestDisplayPipe } from '../../shared/utilities/guest-display-time.pipe';
+import { GuestEditComponent } from './views/guest-edit/guest-edit.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { GuestDisplayPipe } from '../../shared/utilities/guest-display-time.pipe
     GuestFormComponent,
     GuestCreationStatusComponent,
     GuestDisplayPipe,
+    GuestEditComponent,
   ],
   imports: [
     CommonModule,

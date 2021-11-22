@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { HttpClient } from '@angular/common/http';
 import { TranslateLoader } from '@ngx-translate/core';
 import { Observable } from 'rxjs';

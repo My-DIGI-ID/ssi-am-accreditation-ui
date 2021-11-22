@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';

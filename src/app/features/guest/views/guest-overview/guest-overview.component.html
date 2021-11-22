@@ -3,7 +3,7 @@
     <h1 id="caption">
       {{ 'guest.guest-overview-component.table-title' | translate }}
     </h1>
-    <a mat-flat-button [disableRipple]="true" color="primary" id="addGuest" [routerLink]="['../add']">
+    <a mat-flat-button [disableRipple]="true" color="primary" id="addGuest" (click)="goToAddGuest()">
       <mat-icon
         aria-hidden="false"
         attr.aria-label="{{ 'guest.guest-overview-component.aria-label.table.add-button' | translate }}"
@@ -81,13 +81,22 @@
             {{ 'guest.guest-overview-component.table-headers.status' | translate }}
           </span>
         </mat-header-cell>
-        <mat-cell *matCellDef="let element"></mat-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.status }}
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="edit">
-        <mat-header-cell *matHeaderCellDef>
-          {{ 'guest.guest-overview-component.table-headers.action' | translate }}
-        </mat-header-cell>
-        <mat-cell *matCellDef="let element">
+        <mat-header-cell *matHeaderCellDef class="last-column"> </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="last-column">
+          <span
+            attr.aria-label="{{ 'guest.guest-overview-component.aria-label.table.action-menu.edit-guest' | translate }}"
+            role="button"
+            tabindex="0"
+            id="edit-guest-button"
+            (click)="goToEditGuest(element.id)"
+          >
+            <mat-icon class="material-icons-outlined">edit</mat-icon>
+          </span>
           <span
             attr.aria-label="{{
               'guest.guest-overview-component.aria-label.table.action-menu.download-email' | translate
@@ -97,16 +106,7 @@
             id="download-email-button"
             (click)="downloadEmail(element.id)"
           >
-            <mat-icon>email</mat-icon>
-          </span>
-          <span
-            attr.aria-label="{{ 'guest.guest-overview-component.aria-label.table.action-menu.edit-guest' | translate }}"
-            role="button"
-            tabindex="0"
-            id="edit-guest-button"
-            (click)="editGuest(element.id)"
-          >
-            <mat-icon>edit</mat-icon>
+            <mat-icon class="material-icons-outlined">download</mat-icon>
           </span>
           <span
             attr.aria-label="{{
@@ -115,9 +115,9 @@
             role="button"
             tabindex="0"
             id="delete-guest-button"
-            (click)="openDeleteGuestDialog(element.id)"
+            (click)="openDeleteGuestDialog(element.accreditationId)"
           >
-            <mat-icon>delete</mat-icon>
+            <mat-icon class="material-icons-outlined">delete</mat-icon>
           </span>
         </mat-cell>
       </ng-container>

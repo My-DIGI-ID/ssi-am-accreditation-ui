@@ -1,4 +1,8 @@
 export default class EmployeeDashboardViewModel {
+  accreditationId!: string;
+
+  employeeId?: string;
+
   referenceNumber!: string;
 
   firstName!: string;

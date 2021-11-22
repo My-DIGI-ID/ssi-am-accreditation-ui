@@ -7,6 +7,10 @@ export default class GuestFormModel {
 
   title?: string;
 
+  primaryPhone?: string;
+
+  secondaryPhone?: string;
+
   email: string;
 
   typeOfVisit: string;
@@ -20,4 +24,6 @@ export default class GuestFormModel {
   validUntilDate: string;
 
   validUntilTime: string;
+
+  issuedBy?: string;
 }

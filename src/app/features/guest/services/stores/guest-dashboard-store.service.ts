@@ -2,7 +2,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
+import GuestFormModel from '../../models/guest-form.model';
+import GuestAccreditionModel from '../../models/guest-accreditation.model';
 import { ApplicationURL } from '../../../../shared/utilities/application-url';
 import AbstractStore from '../../../../shared/abstractions/store.abstract';
 import GuestDashboardViewModel from '../../models/guest-dashboard-view.model';
@@ -18,15 +20,59 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
   }
 
   protected buildStore(): Observable<GuestDashboardViewModel[]> {
-    return this.guestApiService
-      .getGuests()
-      .pipe(map((apiModels: GuestApiModel[]) => this.mapGuestApiModelToViewModel(apiModels)));
+    const employeeAccreditationList$ = this.getGuestsAccreditation();
+    const employeesList$ = this.getGuests();
+
+    return combineLatest([employeesList$, employeeAccreditationList$]).pipe(
+      map(([employees, accreditation]) =>
+        employees.map((employee) => ({
+          ...employee,
+          status: this.statusMapping(employee, accreditation),
+          accreditationId: accreditation.find((a) => a.guestId === employee.id)?.accreditationId
+            ? accreditation.find((a) => a.guestId === employee.id)?.accreditationId
+            : '',
+        }))
+      )
+    );
+  }
+
+  private statusMapping(employee: GuestDashboardViewModel, accreditation: any): string {
+    let status = accreditation.find((a) => a.guestId === employee.id)?.status
+      ? accreditation.find((a) => a.guestId === employee.id)?.status
+      : '';
+
+    if (status === 'OPEN' || status === 'PENDING' || status === 'BASIS_ID_VERIFICATION_PENDING') {
+      status = 'PENDING';
+    } else if (status === 'CANCELLED' || status === 'BASIS_ID_INVALID' || status === 'REVOKED') {
+      status = 'CANCELLED';
+    }
+
+    return status;
   }
 
   public getGuests(): Observable<GuestDashboardViewModel[]> {
     return this.guestApiService
       .getGuests()
       .pipe(map((apiModels: GuestApiModel[]) => this.mapGuestApiModelToViewModel(apiModels)));
+  }
+
+  public getGuestByPartId(guestId: string): Observable<GuestFormModel> {
+    return this.guestApiService
+      .getGuestByPartId(guestId)
+      .pipe(map((apiModels: any) => this.mapGuestApiModelToFormModel(apiModels)));
+  }
+
+  public editGuest(guest: GuestApiModel): void {
+    this.guestApiService.editGuest(guest).subscribe(
+      (response) => {
+        this.storeSubject.next(this.update(response));
+        this.handleOnResponse(true, ApplicationURL.GuestCreationStatus);
+      },
+      (error: any) => {
+        console.error('Error', error);
+        this.handleOnResponse(false, ApplicationURL.GuestCreationStatus);
+      }
+    );
   }
 
   public addGuest(guest: GuestApiModel): void {
@@ -42,8 +88,8 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
     );
   }
 
-  public deleteGuest(guestId: string): void {
-    this.guestApiService.deleteGuest(guestId).subscribe(
+  public deleteGuest(accreditationId: string): void {
+    this.guestApiService.deleteGuest(accreditationId).subscribe(
       (response) => {
         this.storeSubject.next(this.update(response));
         this.handleOnResponse(true, ApplicationURL.GuestDashboard);
@@ -59,11 +105,44 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
     return this.guestApiService.getInvitationEmail(id);
   }
 
+  private getGuestsAccreditation(): Observable<any> {
+    return this.guestApiService
+      .getGuestsAccredititation()
+      .pipe(map((apiModels: GuestAccreditionModel[]) => this.mapGuestsAccreditationApiModelToViewModel(apiModels)));
+  }
+
   private update(data: GuestApiModel): GuestDashboardViewModel[] {
     const dataT: GuestDashboardViewModel = this.mapGuestApiModelToViewModel([data])[0];
     this.storeSubject.value.push(dataT);
 
     return this.storeSubject.value;
+  }
+
+  private mapGuestsAccreditationApiModelToViewModel(apiModel: GuestAccreditionModel[]): any {
+    return apiModel.map((guestAccreditation) => ({
+      guestId: guestAccreditation.guest.id,
+      accreditationId: guestAccreditation.id,
+      status: guestAccreditation.status,
+    }));
+  }
+
+  private mapGuestApiModelToFormModel(apiModel: GuestApiModel): GuestFormModel {
+    return {
+      firstName: apiModel.firstName,
+      lastName: apiModel.lastName,
+      companyName: apiModel.companyName,
+      title: apiModel.title,
+      primaryPhone: apiModel.primaryPhoneNumber,
+      secondaryPhone: apiModel.secondaryPhoneNumber,
+      email: apiModel.email,
+      typeOfVisit: apiModel.typeOfVisit,
+      location: apiModel.location,
+      validFromDate: apiModel.validFrom,
+      validFromTime: apiModel.validFrom,
+      validUntilDate: apiModel.validUntil,
+      validUntilTime: apiModel.validUntil,
+      issuedBy: apiModel.createdBy,
+    };
   }
 
   private mapGuestApiModelToViewModel(apiModel: GuestApiModel[]): GuestDashboardViewModel[] {
@@ -75,7 +154,7 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
       leaving: this.getTimeFromIsoString(guest.validUntil),
       email: guest.email,
       location: guest.location,
-      status: '', // TODO: WE DONT HAVE STATUS IN BE
+      status: '',
     }));
   }
 
@@ -95,8 +174,9 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
       date = 'Heute';
     }
     const min = (inputDateTime.getMinutes() < 10 ? '0' : '') + inputDateTime.getMinutes();
+    const hour = (inputDateTime.getHours() < 10 ? '0' : '') + inputDateTime.getHours();
 
-    return `${date}, ${inputDateTime.getHours()}:${min}`;
+    return `${date}, ${hour}:${min}`;
   }
 
   private handleOnResponse(status: boolean, url: string): void {
