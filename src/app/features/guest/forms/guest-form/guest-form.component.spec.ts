@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -9,8 +10,26 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import GuestFormModel from '../../models/guest-form.model';
 import NgswService from '../../../../shared/services/ngsw.service';
 import { GuestFormComponent } from './guest-form.component';
+
+const giziGuestFormM: GuestFormModel = {
+  firstName: 'Gizi',
+  lastName: 'Doe',
+  companyName: 'ibm',
+  title: 'Ms',
+  primaryPhone: '012345',
+  secondaryPhone: '000123',
+  email: 'gizi@email.com',
+  typeOfVisit: 'Presentation',
+  location: 'Budapest',
+  validFromDate: '2021-11-26T11:44:08.330Z',
+  validFromTime: '2021-11-26T11:44:08.330Z',
+  validUntilDate: '2021-11-26T11:44:08.330Z',
+  validUntilTime: '2021-11-26T11:44:08.330Z',
+  issuedBy: 'employee-1',
+};
 
 describe('GuestFormComponent', () => {
   let component: GuestFormComponent;
@@ -52,5 +71,54 @@ describe('GuestFormComponent', () => {
     fixture.detectChanges();
 
     expect(submitFormSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it(`if I call the 'populateGuestForm' function , the edit mode should be true`, () => {
+    component.populateGuestForm(giziGuestFormM);
+    fixture.detectChanges();
+
+    expect(component.editMode).toEqual(true);
+  });
+
+  it(`if I call the 'populateGuestForm' function , the firstName should be get the proper value`, () => {
+    component.populateGuestForm(giziGuestFormM);
+    fixture.detectChanges();
+
+    expect(component.guestForm.controls.firstName.value).toEqual(giziGuestFormM.firstName);
+  });
+
+  it('if I call the disableFields function, the company name filed, should be disabled', () => {
+    component.disableFields();
+    fixture.detectChanges();
+
+    expect(component.guestForm.controls.companyName.disabled).toEqual(true);
+  });
+
+  it('if I call the disableFields function, the email field, should be disabled', () => {
+    component.disableFields();
+    fixture.detectChanges();
+
+    expect(component.guestForm.controls.email.disabled).toEqual(true);
+  });
+
+  it('if I call the disableFields function, the issuedBy field, should be disabled', () => {
+    component.disableFields();
+    fixture.detectChanges();
+
+    expect(component.guestForm.controls.issuedBy.disabled).toEqual(true);
+  });
+
+  it('if I call the getTimeFromIsoString with an ISO string, it should return with the time', () => {
+    const isoString = '2021-11-26T03:04:08.330Z';
+    const time = component['getTimeFromIsoString'](isoString);
+
+    const isoStringDate = new Date(isoString);
+    const min = (isoStringDate.getMinutes() < 10 ? '0' : '') + isoStringDate.getMinutes();
+    const hour = (isoStringDate.getHours() < 10 ? '0' : '') + isoStringDate.getHours();
+    const testTime = `${hour}:${min}`;
+
+    fixture.detectChanges();
+
+    expect(time).toEqual(testTime);
   });
 });

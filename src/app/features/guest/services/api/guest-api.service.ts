@@ -84,18 +84,18 @@ export default class GuestApiService {
     );
   }
 
-  public deleteGuest(accreditationId: string): Observable<any> {
-    // TODO
-    if (accreditationId === '') {
-      return Observable.create((observer) => {
-        observer.complete('');
-      });
-    }
-
+  public deleteGuestByAccreditationId(accreditationId: string): Observable<any> {
     return this.http.patch<any>(
       `${
         this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL
       }/api/v2/accreditation/guest/revoke/${accreditationId}`,
+      {}
+    );
+  }
+
+  public deleteGuestByPartyId(partyId: string): Observable<any> {
+    return this.http.delete<any>(
+      `${this.configServie.getConfigStatic().ACCREDITATION_CONTROLLER_BASE_URL}/api/party/guest/${partyId}`,
       {}
     );
   }

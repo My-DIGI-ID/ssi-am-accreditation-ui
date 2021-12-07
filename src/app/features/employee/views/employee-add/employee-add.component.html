@@ -14,7 +14,7 @@
       <a class="link">{{ 'employee.employee-add-component.employee-csv-upload.description-2-link' | translate }}</a>
     </p>
   </div>
-  <app-upload (csvFileUploaded)="onCSVUpload($event)"></app-upload>
+  <app-upload (csvFileUploaded)="onCSVUpload($event)" (error)="onErrorMessage($event)"></app-upload>
 </div>
 <hr />
 <app-employee-form

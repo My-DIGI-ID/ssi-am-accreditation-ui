@@ -28,7 +28,7 @@ export class GuestEditComponent implements AfterViewInit {
     try {
       const guestPartyId = this.activatedRoute.snapshot.params.id;
       this.guestDashboardStoreService.getGuestByPartId(guestPartyId).subscribe((guest) => {
-        this.guestFormComponent!.populateHotelForm(guest);
+        this.guestFormComponent!.populateGuestForm(guest);
         this.guestFormComponent!.disableFields();
       });
     } catch (error) {

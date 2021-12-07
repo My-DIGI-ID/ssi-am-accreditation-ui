@@ -28,7 +28,7 @@ COPY ./ops/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 EXPOSE 4200
 # generate dynamic json from env
-COPY ./ops/docker-entrypoint.sh /
+COPY ./ops/docker-entrypoint.prod.sh /docker-entrypoint.sh
 
 ## Added to fix permission problems when starting in openshift
 RUN chmod 777 -R /usr/share/nginx && touch /usr/share/nginx/html/assets/config/config.json && chmod 777 /usr/share/nginx/html/assets/config/config.json

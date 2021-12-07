@@ -2,7 +2,9 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
+import { of, BehaviorSubject } from 'rxjs';
+import EmployeeAccreditationApiModel from '../../models/employee-accreditation-api.model';
+import EmployeeDashboardViewModel from '../../models/employee-dashboard-view.model';
 import EmployeeApiModel from '../../models/employee-api.model';
 import EmployeeDashboardStoreService from './employee-dashboard.store.service';
 import EmployeeApiService from '../api/employee.api.service';
@@ -21,7 +23,85 @@ class EmployeeApiServiceMock {
   getInvitationEmail = jasmine.createSpy().and.returnValue(of());
 
   getEmployeesAccredtitation = jasmine.createSpy().and.returnValue(of());
+
+  deleteEmployee = jasmine.createSpy().and.returnValue(of(new EmployeeApiModel()));
 }
+
+const joeEmployeeDashboardViewM: EmployeeDashboardViewModel = {
+  accreditationId: 'accreditation-id-1',
+  referenceNumber: 'ref-num-1',
+  employeeId: 'employee-id-1',
+  firstName: 'Joe',
+  lastName: 'Summer',
+  creationDate: '',
+  location: 'Budapest, Noord',
+  status: 'valid',
+};
+
+const joe2EmployeeDashboardViewM: EmployeeDashboardViewModel = {
+  accreditationId: '',
+  referenceNumber: 'ref-num-1',
+  employeeId: 'employee-id-1',
+  firstName: 'Joe',
+  lastName: 'Summer',
+  creationDate: '',
+  location: 'Budapest, Noord',
+  status: '',
+};
+
+const mirandaEmployeeDashboardViewM: EmployeeDashboardViewModel = {
+  accreditationId: 'accreditation-id-2',
+  referenceNumber: 'ref-num-2',
+  employeeId: 'employee-id-2',
+  firstName: 'Miranda',
+  lastName: 'Winter',
+  creationDate: '',
+  location: 'Budapest',
+  status: 'valid',
+};
+
+const joeEmployeeApiM: EmployeeApiModel = {
+  id: 'ref-num-1',
+  firstName: 'Joe',
+  lastName: 'Summer',
+  primaryPhoneNumber: '001234',
+  secondaryPhoneNumber: '',
+  title: 'Mr',
+  email: 'joe@email.com',
+  employeeState: '',
+  position: 'Developer',
+  employeeId: 'employee-id-1',
+  companyName: 'ibm',
+  companyStreet: 'Noord',
+  companyPostalCode: '1234',
+  companyCity: 'Budapest',
+  companyReference: 'company-ref-1',
+};
+
+const joeEmployeeAccreditationApiM: EmployeeAccreditationApiModel = {
+  id: 'accreditation-id-1',
+  employee: {
+    id: 'ref-num-1',
+    firstName: 'Joe',
+    lastName: 'Summer',
+    primaryPhoneNumber: '001234',
+    secondaryPhoneNumber: '',
+    title: 'Mr',
+    email: 'joe@email.com',
+    employeeState: '',
+    position: 'Developer',
+    employeeId: 'employee-id-1',
+    companyName: 'ibm',
+    companyStreet: 'Noord',
+    companyPostalCode: '1234',
+    companyCity: 'Budapest',
+    companyReference: 'company-ref-1',
+  },
+  status: 'valid',
+  invitationUrl: 'myUrl',
+  invitationEmail: 'dennis.lars@ibm.com',
+  invitationQrCode: 'qrCode',
+};
 
 describe('EmployeeDashboardStoreService', () => {
   let service: EmployeeDashboardStoreService;
@@ -34,6 +114,11 @@ describe('EmployeeDashboardStoreService', () => {
     });
     service = TestBed.inject(EmployeeDashboardStoreService);
     employeeApiService = TestBed.inject(EmployeeApiService);
+    service['storeSubject'] = new BehaviorSubject([new EmployeeDashboardViewModel()]);
+  });
+
+  afterAll(() => {
+    TestBed.resetTestingModule();
   });
 
   it('instance should be successfully created', () => {
@@ -55,32 +140,8 @@ describe('EmployeeDashboardStoreService', () => {
   });
 
   it('if the buildStore function is called and the employee and accreditation have a reference number match and a status, the result status should be the same', () => {
-    spyOn<any>(service, 'getEmployeesAccreditation').and.returnValue(
-      of([
-        {
-          referenceNumber: '1',
-          firstName: 'Su',
-          lastName: 'Ming',
-          creationDate: '',
-          location: '',
-          status: 'valid',
-        },
-      ])
-    );
-
-    spyOn(service, 'getEmployees').and.returnValue(
-      of([
-        {
-          accreditationId: '123',
-          referenceNumber: '1',
-          firstName: 'Mario',
-          lastName: 'Sunn',
-          creationDate: '',
-          location: '',
-          status: 'valid',
-        },
-      ])
-    );
+    spyOn<any>(service, 'getEmployeesAccreditation').and.returnValue(of([joeEmployeeDashboardViewM]));
+    spyOn(service, 'getEmployees').and.returnValue(of([joeEmployeeDashboardViewM]));
 
     service['buildStore']().subscribe((subscription: any) => {
       expect(subscription[0].status).toEqual('valid');
@@ -88,32 +149,8 @@ describe('EmployeeDashboardStoreService', () => {
   });
 
   it('if the buildStore function is called and the employee and accreditation have no reference number match, the result status should be an empty string', () => {
-    spyOn<any>(service, 'getEmployeesAccreditation').and.returnValue(
-      of([
-        {
-          referenceNumber: '1',
-          firstName: 'Su',
-          lastName: 'Ming',
-          creationDate: '',
-          location: '',
-          status: 'valid',
-        },
-      ])
-    );
-
-    spyOn(service, 'getEmployees').and.returnValue(
-      of([
-        {
-          accreditationId: '123',
-          referenceNumber: '2',
-          firstName: 'Mario',
-          lastName: 'Sunn',
-          creationDate: '',
-          location: '',
-          status: 'valid',
-        },
-      ])
-    );
+    spyOn<any>(service, 'getEmployeesAccreditation').and.returnValue(of([joeEmployeeDashboardViewM]));
+    spyOn(service, 'getEmployees').and.returnValue(of([mirandaEmployeeDashboardViewM]));
 
     service['buildStore']().subscribe((subscription: any) => {
       expect(subscription[0].status).toEqual('');
@@ -121,32 +158,8 @@ describe('EmployeeDashboardStoreService', () => {
   });
 
   it('if the buildStore function is called, the getEmployeesAccreditation function should be also called', () => {
-    spyOn<any>(service, 'getEmployeesAccreditation').and.returnValue(
-      of([
-        {
-          referenceNumber: '1',
-          firstName: 'Su',
-          lastName: 'Ming',
-          creationDate: '',
-          location: '',
-          status: 'valid',
-        },
-      ])
-    );
-
-    spyOn(service, 'getEmployees').and.returnValue(
-      of([
-        {
-          accreditationId: '123',
-          referenceNumber: '1',
-          firstName: 'Mario',
-          lastName: 'Sunn',
-          creationDate: '',
-          location: '',
-          status: 'valid',
-        },
-      ])
-    );
+    spyOn<any>(service, 'getEmployeesAccreditation').and.returnValue(of([joeEmployeeDashboardViewM]));
+    spyOn(service, 'getEmployees').and.returnValue(of([joeEmployeeDashboardViewM]));
 
     service['buildStore']().subscribe((subscription: any) => {
       expect(subscription[0].status).toEqual('valid');
@@ -160,54 +173,21 @@ describe('EmployeeDashboardStoreService', () => {
   });
 
   it('if the mapEmployeeApiModelToViewModel function is called, it should have an EmployeeDashboardViewModel[] output', () => {
-    const result = service['mapEmployeeApiModelToViewModel']([new EmployeeApiModel()]);
+    const result = service['mapEmployeeApiModelToViewModel']([joeEmployeeApiM]);
 
-    const expectedResult = {
-      accreditationId: '',
-      employeeId: undefined,
-      referenceNumber: undefined,
-      firstName: undefined,
-      lastName: undefined,
-      creationDate: '',
-      location: 'undefined, undefined',
-      status: '',
-    };
-
-    expect(result).toEqual([Object(expectedResult)]);
+    expect(result).toEqual([Object(joe2EmployeeDashboardViewM)]);
   });
 
   it('if the mapEmployeeAccreditationApiModelToViewModel function is called, it should return an EmployeeDashboardViewModel', () => {
-    const output = service['mapEmployeeAccreditationApiModelToViewModel']([
-      {
-        id: '1234',
-        employee: {
-          id: '2345',
-          firstName: 'Dennis',
-          lastName: 'Lars',
-          primaryPhoneNumber: '0049167874213',
-          employeeState: 'active',
-          employeeId: '123',
-        },
-        status: 'valid',
-        invitationUrl: 'myUrl',
-        invitationEmail: 'dennis.lars@ibm.com',
-        invitationQrCode: 'qrCode',
-      },
-    ]);
+    const output = service['mapEmployeeAccreditationApiModelToViewModel']([joeEmployeeAccreditationApiM]);
 
-    const expectedOutput = [
-      {
-        accreditationId: '1234',
-        employeeId: '123',
-        referenceNumber: '2345',
-        firstName: 'Dennis',
-        lastName: 'Lars',
-        creationDate: '',
-        location: '',
-        status: 'valid',
-      },
-    ];
+    expect(output).toEqual([Object(joeEmployeeDashboardViewM)]);
+  });
 
-    expect(output).toEqual(expectedOutput);
+  it('if the deleteEmployee function is called, the employeeApiService should also call the deleteEmployee function', () => {
+    spyOn<any>(service, 'update').and.returnValue(of([joeEmployeeDashboardViewM]));
+    service.deleteEmployee('accreditation-id-1');
+
+    expect(employeeApiService.deleteEmployee).toHaveBeenCalledWith('accreditation-id-1');
   });
 });

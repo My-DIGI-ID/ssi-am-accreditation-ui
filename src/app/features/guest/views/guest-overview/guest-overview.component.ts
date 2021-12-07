@@ -61,11 +61,11 @@ export default class GuestOverviewComponent implements OnInit {
     location.reload();
   }
 
-  public openDeleteGuestDialog(id: string): void {
+  public openDeleteGuestDialog(guest: any): void {
     this.dialogConfirmRef = this.dialog.open(DialogComponent, {
       width: '30%',
       data: {
-        guestId: id,
+        guestId: guest,
         title: this.translate.instant('guest.guest-overview-component.delete-guest-dialog.title'),
         discription: this.translate.instant('guest.guest-overview-component.delete-guest-dialog.discription'),
         firstButtonText: this.translate.instant('guest.guest-overview-component.delete-guest-dialog.firstButtonText'),
@@ -75,7 +75,11 @@ export default class GuestOverviewComponent implements OnInit {
     });
     this.dialogConfirmRef.afterClosed().subscribe((affirmativeAction) => {
       if (affirmativeAction === 'second') {
-        this.deleteGuest(id);
+        if (guest.accreditationId.length !== 0) {
+          this.deleteGuestByAccreditationId(guest.accreditationId);
+        } else {
+          this.deleteGuestByPartyId(guest.id);
+        }
       }
     });
   }
@@ -129,15 +133,30 @@ export default class GuestOverviewComponent implements OnInit {
       } else if (guest.status === 'CANCELLED') {
         // eslint-disable-next-line no-param-reassign
         guest.status = this.translate.instant('guest.guest-overview-component.guest-status.cancelled');
+      } else if (guest.status === 'CHECK_IN') {
+        // eslint-disable-next-line no-param-reassign
+        guest.status = this.translate.instant('guest.guest-overview-component.guest-status.check-in');
+      } else if (guest.status === 'CHECK_OUT') {
+        // eslint-disable-next-line no-param-reassign
+        guest.status = this.translate.instant('guest.guest-overview-component.guest-status.check-out');
       }
       return guest;
     });
     return guests;
   }
 
-  private deleteGuest(accreditationId: string): void {
+  private deleteGuestByAccreditationId(accreditationId: string): void {
     try {
-      this.store.deleteGuest(accreditationId);
+      this.store.deleteGuestByAccreditationId(accreditationId);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  private deleteGuestByPartyId(partyId: string): void {
+    try {
+      this.store.deleteGuestByPartyId(partyId);
+      this.reloadPage();
     } catch (error) {
       console.log(error);
     }

@@ -98,7 +98,7 @@ export default class GuestStoreService extends AbstractStore<GuestViewModel[]> {
       const requestInterval = setInterval(() => {
         this.guestAccreditationApiService.getAccreditationCompletionStatus(accreditationId).subscribe(
           (completionStatus: any) => {
-            if (completionStatus.status) {
+            if (JSON.parse(String(completionStatus.status))) {
               observer.next(completionStatus);
               observer.complete();
               this.credentialsOffered.next(true);

@@ -13,6 +13,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import GuestDashboardStoreService from '../../services/stores/guest-dashboard-store.service';
 import GuestOverviewComponent from './guest-overview.component';
 import NgswService from '../../../../shared/services/ngsw.service';
+import GuestDashboardViewModel from 'features/guest/models/guest-dashboard-view.model';
 
 class StoreMock {
   connect = jasmine.createSpy().and.returnValue(
@@ -53,7 +54,9 @@ class StoreMock {
 
   addGuest = jasmine.createSpy();
 
-  deleteGuest = jasmine.createSpy();
+  deleteGuestByAccreditationId = jasmine.createSpy();
+
+  deleteGuestByPartyId = jasmine.createSpy();
 
   downloadEmail = jasmine.createSpy().and.returnValue(
     of({
@@ -67,6 +70,7 @@ describe('GuestOverviewComponent', () => {
   let fixture: ComponentFixture<GuestOverviewComponent>;
   let dialog: MatDialog;
   let router: Router;
+  let translate: TranslateService;
 
   beforeEach(async () => {
     const routerMock = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
@@ -105,6 +109,7 @@ describe('GuestOverviewComponent', () => {
     router = TestBed.inject(Router);
     fixture = TestBed.createComponent(GuestOverviewComponent);
     component = fixture.componentInstance;
+    translate = fixture.debugElement.injector.get(TranslateService);
     spyOn(component, 'reloadPage').and.returnValue();
 
     fixture.detectChanges();
@@ -121,12 +126,20 @@ describe('GuestOverviewComponent', () => {
     expect(store.downloadEmail).toHaveBeenCalled();
   });
 
-  it('If I call the deleteGuest function the GuestDashboardStoreService should be called', () => {
+  it('If I call the deleteGuestByAccreditationId function the GuestDashboardStoreService should be called', () => {
     // eslint-disable-next-line dot-notation
-    component['deleteGuest']('id-123');
+    component['deleteGuestByAccreditationId']('id-123');
     fixture.detectChanges();
 
-    expect(store.deleteGuest).toHaveBeenCalled();
+    expect(store.deleteGuestByAccreditationId).toHaveBeenCalled();
+  });
+
+  it('If I call the deleteGuestByPartyId function the GuestDashboardStoreService should be called', () => {
+    // eslint-disable-next-line dot-notation
+    component['deleteGuestByPartyId']('id-123');
+    fixture.detectChanges();
+
+    expect(store.deleteGuestByPartyId).toHaveBeenCalled();
   });
 
   it('If I call editGuest function the log should be called', () => {
@@ -146,15 +159,128 @@ describe('GuestOverviewComponent', () => {
     expect(dialog.open).toHaveBeenCalled();
   });
 
-  it('if openDeleteGuestDialog function is called and affirmativeAction is second, deleteGuest should be called', () => {
+  it('if openDeleteGuestDialog function is called with existing accreditationId and affirmativeAction is second, deleteGuestByAccreditationId should be called', () => {
     spyOn(dialog, 'open').and.returnValue({ afterClosed: () => of('second') } as MatDialogRef<
       typeof GuestOverviewComponent
     >);
 
-    const deleteGuestSpy = spyOn<any>(component, 'deleteGuest');
-
-    component.openDeleteGuestDialog('id-1');
+    const deleteGuestSpy = spyOn<any>(component, 'deleteGuestByAccreditationId');
+    const guest = {
+      accreditationId: 'id-1',
+    };
+    component.openDeleteGuestDialog(guest);
 
     expect(deleteGuestSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('if openDeleteGuestDialog function is called without exicting accreditationId and affirmativeAction is second, deleteGuestByPartyId should be called', () => {
+    spyOn(dialog, 'open').and.returnValue({ afterClosed: () => of('second') } as MatDialogRef<
+      typeof GuestOverviewComponent
+    >);
+
+    const deleteGuestSpy = spyOn<any>(component, 'deleteGuestByPartyId');
+    const guest = {
+      accreditationId: '',
+    };
+    component.openDeleteGuestDialog(guest);
+
+    expect(deleteGuestSpy).toHaveBeenCalledTimes(1);
+  });
+
+  describe('if we call the statusTransalation function with', () => {
+    let guests: GuestDashboardViewModel[];
+    beforeEach(() => {
+      const guestsDashboardViewM: GuestDashboardViewModel[] = [
+        {
+          id: '0',
+          firstName: 'Gizi',
+          lastName: 'Doe',
+          arriving: '',
+          leaving: '',
+          email: 'gizi@email.com',
+          location: 'Budapest',
+          status: 'ACCEPTED',
+          accreditationId: '',
+        },
+        {
+          id: '1',
+          firstName: 'Gizi',
+          lastName: 'Doe',
+          arriving: '',
+          leaving: '',
+          email: 'gizi@email.com',
+          location: 'Budapest',
+          status: 'PENDING',
+          accreditationId: '',
+        },
+        {
+          id: '2',
+          firstName: 'Gizi',
+          lastName: 'Doe',
+          arriving: '',
+          leaving: '',
+          email: 'gizi@email.com',
+          location: 'Budapest',
+          status: 'CANCELLED',
+          accreditationId: '',
+        },
+        {
+          id: '3',
+          firstName: 'Gizi',
+          lastName: 'Doe',
+          arriving: '',
+          leaving: '',
+          email: 'gizi@email.com',
+          location: 'Budapest',
+          status: 'CHECK_IN',
+          accreditationId: '',
+        },
+        {
+          id: '4',
+          firstName: 'Gizi',
+          lastName: 'Doe',
+          arriving: '',
+          leaving: '',
+          email: 'gizi@email.com',
+          location: 'Budapest',
+          status: 'CHECK_OUT',
+          accreditationId: '',
+        },
+      ];
+
+      // eslint-disable-next-line dot-notation
+      guests = component['statusTransalation'](guestsDashboardViewM);
+      fixture.detectChanges();
+    });
+
+    it('ACCEPTED status, it should return with the proper transalation', () => {
+      const acceptedStatus = translate.instant('guest.guest-overview-component.guest-status.accepted');
+
+      expect(guests[0].status).toEqual(acceptedStatus);
+    });
+
+    it('PENDING status, it should return with the proper transalation', () => {
+      const pendingStatus = translate.instant('guest.guest-overview-component.guest-status.pending');
+
+      expect(guests[1].status).toEqual(pendingStatus);
+    });
+
+    it('CANCELLED status, it should return with the proper transalation', () => {
+      const cancelledStatus = translate.instant('guest.guest-overview-component.guest-status.cancelled');
+
+      expect(guests[2].status).toEqual(cancelledStatus);
+    });
+
+    it('CHECK_IN status, it should return with the proper transalation', () => {
+      const checkInStatus = translate.instant('guest.guest-overview-component.guest-status.check-in');
+
+      expect(guests[3].status).toEqual(checkInStatus);
+    });
+
+    it('CHECK_OUT status, it should return with the proper transalation', () => {
+      const checkOutStatus = translate.instant('guest.guest-overview-component.guest-status.check-out');
+
+      expect(guests[4].status).toEqual(checkOutStatus);
+    });
   });
 });

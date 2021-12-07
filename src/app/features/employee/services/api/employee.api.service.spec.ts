@@ -16,6 +16,7 @@ describe('EmployeeApiService', () => {
   let service: EmployeeApiService;
   let httpGetSpy: jasmine.Spy;
   let httpPostSpy: jasmine.Spy;
+  let httpPatchSpy: jasmine.Spy;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -26,6 +27,7 @@ describe('EmployeeApiService', () => {
     TestBed.inject(ConfigInitService);
     httpGetSpy = spyOn(service['http'], 'get').and.callThrough();
     httpPostSpy = spyOn(service['http'], 'post').and.callThrough();
+    httpPatchSpy = spyOn(service['http'], 'patch').and.callThrough();
   });
 
   it('instance should be successfully created', () => {
@@ -78,5 +80,11 @@ describe('EmployeeApiService', () => {
     service.getEmployeesAccredtitation();
 
     expect(httpGetSpy).toHaveBeenCalledWith('myUrl/api/v2/accreditation/employee');
+  });
+
+  it('if deleteEmployee function is called, the http patch function should also be called', () => {
+    service.deleteEmployee('123');
+
+    expect(httpPatchSpy).toHaveBeenCalledWith('myUrl/api/v2/accreditation/employee/revoke/123', {});
   });
 });

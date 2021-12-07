@@ -79,7 +79,7 @@ export default class EmployeeDashboardStoreService extends AbstractStore<Employe
       firstName: accreditation.employee.firstName,
       lastName: accreditation.employee.lastName,
       creationDate: '',
-      location: '',
+      location: `${accreditation.employee.companyCity}, ${accreditation.employee.companyStreet}`,
       status: accreditation.status,
     }));
   }
@@ -87,7 +87,7 @@ export default class EmployeeDashboardStoreService extends AbstractStore<Employe
   private update(data: EmployeeAccreditationApiModel): EmployeeDashboardViewModel[] {
     const dataD: EmployeeDashboardViewModel = {
       accreditationId: data.id,
-      employeeId: data.employee.employeeId,
+      employeeId: data.employee?.employeeId,
       referenceNumber: data.employee.id,
       firstName: data.employee.firstName,
       lastName: data.employee.lastName,
@@ -100,8 +100,8 @@ export default class EmployeeDashboardStoreService extends AbstractStore<Employe
     return this.storeSubject.value;
   }
 
-  public deleteEmployee(employeeId: string): void {
-    this.employeeApiService.deleteEmployee(employeeId).subscribe(
+  public deleteEmployee(id: string): void {
+    this.employeeApiService.deleteEmployee(id).subscribe(
       (response: EmployeeAccreditationApiModel) => {
         this.storeSubject.next(this.update(response));
       },

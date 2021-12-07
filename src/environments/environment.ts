@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  configFile: './assets/config/keycloak-config.dev.json',
+  configFile: './assets/config/config.json',
 };
 
 export default environment;

@@ -20,31 +20,42 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
   }
 
   protected buildStore(): Observable<GuestDashboardViewModel[]> {
-    const employeeAccreditationList$ = this.getGuestsAccreditation();
-    const employeesList$ = this.getGuests();
+    const guestAccreditationList$ = this.getGuestsAccreditation();
+    const guestsList$ = this.getGuests();
 
-    return combineLatest([employeesList$, employeeAccreditationList$]).pipe(
-      map(([employees, accreditation]) =>
-        employees.map((employee) => ({
-          ...employee,
-          status: this.statusMapping(employee, accreditation),
-          accreditationId: accreditation.find((a) => a.guestId === employee.id)?.accreditationId
-            ? accreditation.find((a) => a.guestId === employee.id)?.accreditationId
+    return combineLatest([guestsList$, guestAccreditationList$]).pipe(
+      map(([guests, accreditation]) =>
+        guests.map((guest) => ({
+          ...guest,
+          status: this.statusMapping(guest, accreditation),
+          accreditationId: accreditation.find((a) => a.guestId === guest.id)?.accreditationId
+            ? accreditation.find((a) => a.guestId === guest.id)?.accreditationId
             : '',
         }))
       )
     );
   }
 
-  private statusMapping(employee: GuestDashboardViewModel, accreditation: any): string {
-    let status = accreditation.find((a) => a.guestId === employee.id)?.status
-      ? accreditation.find((a) => a.guestId === employee.id)?.status
+  private statusMapping(guest: GuestDashboardViewModel, accreditation: any): string {
+    let status = accreditation.find((a) => a.guestId === guest.id)?.status
+      ? accreditation.find((a) => a.guestId === guest.id)?.status
       : '';
 
-    if (status === 'OPEN' || status === 'PENDING' || status === 'BASIS_ID_VERIFICATION_PENDING') {
+    if (
+      status === 'OPEN' ||
+      status === 'PENDING' ||
+      status === 'BASIS_ID_VERIFICATION_PENDING' ||
+      status === 'BASIS_ID_VALID'
+    ) {
       status = 'PENDING';
     } else if (status === 'CANCELLED' || status === 'BASIS_ID_INVALID' || status === 'REVOKED') {
       status = 'CANCELLED';
+    } else if (status === 'ACCEPTED') {
+      status = 'ACCEPTED';
+    } else if (status === 'CHECK_IN') {
+      status = 'CHECK_IN';
+    } else if (status === 'CHECK_OUT') {
+      status = 'CHECK_OUT';
     }
 
     return status;
@@ -88,8 +99,21 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
     );
   }
 
-  public deleteGuest(accreditationId: string): void {
-    this.guestApiService.deleteGuest(accreditationId).subscribe(
+  public deleteGuestByAccreditationId(accreditationId: string): void {
+    this.guestApiService.deleteGuestByAccreditationId(accreditationId).subscribe(
+      (response) => {
+        this.storeSubject.next(this.update(response));
+        this.handleOnResponse(true, ApplicationURL.GuestDashboard);
+      },
+      (error: any) => {
+        console.error('Error', error);
+        this.handleOnResponse(false, ApplicationURL.GuestDashboard);
+      }
+    );
+  }
+
+  public deleteGuestByPartyId(partyId: string): void {
+    this.guestApiService.deleteGuestByPartyId(partyId).subscribe(
       (response) => {
         this.storeSubject.next(this.update(response));
         this.handleOnResponse(true, ApplicationURL.GuestDashboard);
@@ -112,8 +136,10 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
   }
 
   private update(data: GuestApiModel): GuestDashboardViewModel[] {
-    const dataT: GuestDashboardViewModel = this.mapGuestApiModelToViewModel([data])[0];
-    this.storeSubject.value.push(dataT);
+    if (data) {
+      const dataT: GuestDashboardViewModel = this.mapGuestApiModelToViewModel([data])[0];
+      this.storeSubject.value.push(dataT);
+    }
 
     return this.storeSubject.value;
   }

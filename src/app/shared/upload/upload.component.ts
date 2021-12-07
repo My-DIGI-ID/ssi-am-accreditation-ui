@@ -10,6 +10,8 @@ import UploadService from './services/upload.service';
 export default class UploadComponent {
   @Output() csvFileUploaded: EventEmitter<FormData> = new EventEmitter();
 
+  @Output() error: EventEmitter<string[]> = new EventEmitter();
+
   public files: FileList;
 
   public fileInDropArea: boolean | undefined;
@@ -46,9 +48,13 @@ export default class UploadComponent {
 
         this.emitFormData(formData);
       } else {
-        // TODO: ErrorHandling
+        this.emitErrorMessage(this.errorMessage);
       }
     }
+  }
+
+  private emitErrorMessage(errorMessage: string[]): void {
+    this.error.emit(errorMessage);
   }
 
   private emitFormData(formData: FormData): void {
@@ -56,8 +62,10 @@ export default class UploadComponent {
   }
 
   private verifyFileSize(file: File): void {
-    if (!this.uploadService.isFileSizeValid(file)) {
+    if (!this.uploadService.isFileMaxSizeValid(file)) {
       this.errorMessage.push('Size limit exceeded.');
+    } else if (!this.uploadService.isFileMinSizeValid(file)) {
+      this.errorMessage.push('File is empty.');
     }
   }
 
@@ -68,7 +76,7 @@ export default class UploadComponent {
   }
 
   private async verifyEncoding(file: File): Promise<void> {
-    if (!(await this.uploadService.isEncodingUTF8(file))) {
+    if (!(await this.uploadService.isEncodingTypeValid(file))) {
       this.errorMessage.push('Encoding is not correct.');
     }
   }

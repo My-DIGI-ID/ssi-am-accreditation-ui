@@ -32,6 +32,15 @@ export default class EmployeeAddComponent implements OnInit {
     this.store.handleEmployeeCreation(employeeFormModel);
   }
 
+  public onErrorMessage(errorMessage: string[]): void {
+    this.router.navigate(['/employee/creation-status'], {
+      state: {
+        success: false,
+        data: errorMessage,
+      },
+    });
+  }
+
   public goToDashboard(): void {
     this.router.navigateByUrl('employee/dashboard');
   }

@@ -16,6 +16,7 @@ describe('GuestApiService', () => {
   let httpPostSpy: jasmine.Spy;
   let httpPutSpy: jasmine.Spy;
   let httpPatchSpy: jasmine.Spy;
+  let httpDeleteSpy: jasmine.Spy;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -28,6 +29,7 @@ describe('GuestApiService', () => {
     httpPostSpy = spyOn(guestApiService['http'], 'post').and.callThrough();
     httpPutSpy = spyOn(guestApiService['http'], 'put').and.callThrough();
     httpPatchSpy = spyOn(guestApiService['http'], 'patch').and.callThrough();
+    httpDeleteSpy = spyOn(guestApiService['http'], 'delete').and.callThrough();
   });
 
   it('instance should be successfully created', () => {
@@ -119,14 +121,20 @@ describe('GuestApiService', () => {
     expect(httpPutSpy).toHaveBeenCalledWith('myUrl/api/v2/party/guest/', guest, guestApiService.httpHeader);
   });
 
-  it('if I call the deleteGuest function, the http patch function should also be called', () => {
-    guestApiService.deleteGuest('123');
+  it('if I call the deleteGuestByAccreditationId function, the http patch function should also be called', () => {
+    guestApiService.deleteGuestByAccreditationId('123');
 
     expect(httpPatchSpy).toHaveBeenCalledWith('myUrl/api/v2/accreditation/guest/revoke/123', {});
   });
 
-  it('if I call the deleteGuest function with empty string, the http patch function should not be called', () => {
-    guestApiService.deleteGuest('');
+  it('if I call the deleteGuestByPartyId function, the http patch function should also be called', () => {
+    guestApiService.deleteGuestByPartyId('123');
+
+    expect(httpDeleteSpy).toHaveBeenCalledWith('myUrl/api/party/guest/123', {});
+  });
+
+  it('if I call the deleteGuestByAccreditationId function with empty string, the http patch function should not be called', () => {
+    guestApiService.deleteGuestByAccreditationId('');
 
     expect(httpPatchSpy).not.toHaveBeenCalledWith('myUrl/api/v2/accreditation/guest/revoke/123', {});
   });

@@ -23,7 +23,6 @@ module.exports = {
         'import/prefer-default-export': 'off',
         '@typescript-eslint/no-shadow': ['error'],
         '@typescript-eslint/no-unused-vars': [2, { args: 'after-used', argsIgnorePattern: '^_' }],
-        'prettier/prettier': 'error',
         // to prevent eslint complain about initializing service in constructor with empty constructor body
         'no-useless-constructor': 'off',
         '@typescript-eslint/no-useless-constructor': ['error'],

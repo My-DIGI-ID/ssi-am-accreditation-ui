@@ -19,8 +19,12 @@ export default class UploadService {
     'application/x-csv',
   ];
 
-  public isFileSizeValid(file: File): boolean {
+  public isFileMaxSizeValid(file: File): boolean {
     return file.size <= this.fileSizeLimit;
+  }
+
+  public isFileMinSizeValid(file: File): boolean {
+    return file.size > 0;
   }
 
   public isMimeTypeValid(file: File): boolean {
@@ -33,8 +37,13 @@ export default class UploadService {
     return this.acceptedFileMimeTypes.indexOf(fileMimeType) > -1;
   }
 
-  public async isEncodingUTF8(file: File): Promise<boolean> {
-    return (await this.getEncoding(file)) === 'UTF8' || (await this.getEncoding(file)) === 'ASCII';
+  public async isEncodingTypeValid(file: File): Promise<boolean> {
+    if (!this.isFileMinSizeValid(file)) {
+      return Promise.resolve(true);
+    }
+    const encoding = await this.getEncoding(file);
+
+    return encoding === 'UTF8' || encoding === 'ASCII' || encoding === 'SJIS';
   }
 
   public appendFileToFormData(file: File): FormData {

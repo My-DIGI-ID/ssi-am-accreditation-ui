@@ -31,7 +31,7 @@ export class GuestFormComponent {
     this.submitForm.emit();
   }
 
-  public populateHotelForm(guest: GuestFormModel): void {
+  public populateGuestForm(guest: GuestFormModel): void {
     this.editMode = true;
     this.guestForm.markAllAsTouched();
     this.guestForm.patchValue(

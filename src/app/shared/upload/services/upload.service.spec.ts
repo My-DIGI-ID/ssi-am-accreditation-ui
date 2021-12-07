@@ -4,21 +4,31 @@ import UploadService from './upload.service';
 describe('UploadService', () => {
   let service: UploadService;
   let file: File;
+  let fileEmpty: File;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [UploadService],
     });
     service = TestBed.inject(UploadService);
-    file = new File([''], 'filename', { type: 'text/csv' });
+    file = new File(['1'], 'filename', { type: 'text/csv' });
+    fileEmpty = new File([], 'filename', { type: 'text/csv' });
   });
 
   it('instance should be successfully created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('if I call the isFileSizeValid function with test file, it should be return with true', () => {
-    expect(service.isFileSizeValid(file)).toEqual(true);
+  it('if I call the isFileMaxSizeValid function with test file, it should be return with true', () => {
+    expect(service.isFileMaxSizeValid(file)).toEqual(true);
+  });
+
+  it('if I call the isFileMinSizeValid function with test file, it should be return with true', () => {
+    expect(service.isFileMinSizeValid(file)).toEqual(true);
+  });
+
+  it('if I call the isFileMinSizeValid function with test fileEmpty, it should be return with false', () => {
+    expect(service.isFileMinSizeValid(fileEmpty)).toEqual(false);
   });
 
   it('if I call the isMimeTypeValid function with test file, it should be return with true', () => {
@@ -32,8 +42,9 @@ describe('UploadService', () => {
     expect(service.isMimeTypeValid(file3)).toEqual(false);
   });
 
-  it('if I call the isEncodingUTF8 function with test file, it should be return with false', async () => {
-    const isEncoding = service.isEncodingUTF8(file).then((x) => expect(x).toEqual(false));
+  it('if I call the isEncodingTypeValid function with test file, it should be return with true', async () => {
+    const isEncoding = service.isEncodingTypeValid(file).then((x) => expect(x).toEqual(true));
+
     expect(isEncoding).toBeDefined();
   });
 
