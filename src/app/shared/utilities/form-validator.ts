@@ -1,12 +1,35 @@
+/*
+ * Copyright 2021 Bundesrepublik Deutschland
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-param-reassign */
 import { Injectable } from '@angular/core';
 import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
 
+/**
+ * Class representing the FormValidator
+ */
 @Injectable({
   providedIn: 'root',
 })
 export default class FormValidator {
+  /**
+   * Phone fields validator that makes sure no forbidden characters are present in the respective field.
+   * @return {ValidatorFn} validator
+   */
   public forbiddenCharactersPhone(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const whitelistedCharacters = new RegExp(/[^\s- +()0-9]/gi);
@@ -19,6 +42,10 @@ export default class FormValidator {
     };
   }
 
+  /**
+   * Generic string validator that makes sure no forbidden characters are present in the respective field.
+   * @return {ValidatorFn} validator
+   */
   public forbiddenCharactersString(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const whitelistedCharacters = new RegExp(/[^\sa-z0-9,_.&äáâàăçéëêèïíììñóöôòøöșțüúüûùßẞ-]/gi);
@@ -31,6 +58,10 @@ export default class FormValidator {
     };
   }
 
+  /**
+   * Whitespace validator that makes sure no whitespaces are present in the field where the validator is applied
+   * @return {ValidatorFn} validator
+   */
   public requiredNoWhitespace(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       const forbiddenCharactersRegex = new RegExp(/\s/g);
@@ -43,6 +74,10 @@ export default class FormValidator {
     };
   }
 
+  /**
+   * Whitespace validator that makes sure no whitespaces are present in the beginning and the end of the string that is being checked
+   * @return {ValidatorFn} validator
+   */
   public requiredNoWhitespaceFill(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (control.value == null || control.value.length === 0 || control.value.trim() === '') {
@@ -53,11 +88,24 @@ export default class FormValidator {
     };
   }
 
+  /**
+   * Sanitizes the form
+   * @param {FormGroup} form - form values
+   * @return {any} - sanitized form values
+   */
   public getSanitizedRawFormValues(form: FormGroup): any {
     return this.sanitizeRawFormValues(form.getRawValue());
   }
 
-  public checkTimeRange(fromDate: string, fromTime: string, endDate: string, endTime: string) {
+  /**
+   * Checks the time range to be a valid one by using the dates and times of the departure and arrival as input
+   * @param {string} fromDate - date of arrival
+   * @param {string} fromTime - time of arrival
+   * @param {string} endDate - date of departure
+   * @param {string} endTime - date of departure
+   * @return {any} - validator - invalidates form group on errors
+   */
+  public checkTimeRange(fromDate: string, fromTime: string, endDate: string, endTime: string): any {
     return (group: FormGroup): { [key: string]: any } => {
       const errorObject: { [key: string]: any } = {};
 
@@ -142,10 +190,10 @@ export default class FormValidator {
     };
   }
 
-  private isDate(date: any): boolean {
-    return date instanceof Date;
-  }
-
+  /**
+   * Date validator that makes sure the string is parseable into a valid date
+   * @return {ValidatorFn} - validator
+   */
   public validDateString(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       // eslint-disable-next-line no-restricted-globals
@@ -157,6 +205,10 @@ export default class FormValidator {
 
       return null;
     };
+  }
+
+  private isDate(date: any): boolean {
+    return date instanceof Date;
   }
 
   private isTimeString(timeString: string): boolean {

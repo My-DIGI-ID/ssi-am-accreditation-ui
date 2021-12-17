@@ -10,6 +10,9 @@
 # dependencies
 /node_modules
 
+# documentation
+/documentation
+
 # profiling files
 chrome-profiler-events*.json
 
@@ -29,6 +32,7 @@ chrome-profiler-events*.json
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+.scannerwork/
 
 # misc
 /.sass-cache

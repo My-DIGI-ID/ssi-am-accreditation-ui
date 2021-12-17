@@ -1,9 +1,28 @@
+/*
+ * Copyright 2021 Bundesrepublik Deutschland
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* eslint-disable class-methods-use-this */
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import FormValidator from '../../../../../../shared/utilities/form-validator';
 import GuestApiModel from '../../../../models/guest-api.model';
 
+/**
+ * Class representing the VisitAndGuestDetailsComponent
+ */
 @Component({
   selector: 'app-visit-and-guest-details',
   templateUrl: './visit-and-guest-details.component.html',
@@ -18,17 +37,30 @@ export class VisitAndGuestDetailsComponent implements OnChanges {
 
   public guestForm: FormGroup;
 
+  /**
+   * Instantiates the VisitAndGuestDetailsComponent, creates guest form and disables fields
+   * @param {FormBuilder} formBuilder - Constructs a new `FormGroup` instance.
+   * @param {FormValidator} formValidator - A utility that holds form validation rules
+   */
   public constructor(private readonly formBuilder: FormBuilder, private readonly formValidator: FormValidator) {
     this.guestForm = this.createGuestForm();
     this.disableFields();
   }
 
+  /**
+   * In the event of changes of the guest's current value, the guest form gets populated
+   * @param {SimpleChanges} changes - A hashtable of changes represented by SimpleChange objects stored at the declared property name they belong to on a Directive or Component. This is the type passed to the ngOnChanges hook.
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes && changes.guest && changes.guest.currentValue) {
       this.populateGuestForm(changes.guest.currentValue);
     }
   }
 
+  /**
+   * Populates the guest form with the values from the DTO assigned as parameter
+   * @param {GuestApiModel} guestApiDTO - DTO of the guest
+   */
   public populateGuestForm(guestApiDTO: GuestApiModel): void {
     this.guestForm.patchValue({
       firstName: guestApiDTO.firstName,
@@ -48,6 +80,9 @@ export class VisitAndGuestDetailsComponent implements OnChanges {
     });
   }
 
+  /**
+   * Disable fields from the guest form
+   */
   public disableFields(): void {
     this.guestForm.get('firstName')!.disable();
     this.guestForm.get('lastName')!.disable();
@@ -63,6 +98,10 @@ export class VisitAndGuestDetailsComponent implements OnChanges {
     this.guestForm.get('issuedBy')!.disable();
   }
 
+  /**
+   * Creates guest form and returns it
+   * @return {FormGroup} Guest form
+   */
   private createGuestForm(): FormGroup {
     return this.formBuilder.group({
       firstName: [[{ value: '', disabled: true }], []],
@@ -110,10 +149,18 @@ export class VisitAndGuestDetailsComponent implements OnChanges {
     });
   }
 
+  /**
+   * Emits submitForm event
+   */
   public submit(): void {
     this.submitForm.emit();
   }
 
+  /**
+   * Parses date and returns it
+   * @param {string} date - date
+   * @return {string} date
+   */
   private getDateFromDTO(date: string): string {
     if (date) {
       const inputDate = new Date(date);
@@ -124,6 +171,11 @@ export class VisitAndGuestDetailsComponent implements OnChanges {
     return date;
   }
 
+  /**
+   * Parses date and returns it
+   * @param {string} date - date
+   * @return {string} date
+   */
   private getTimeFromDTO(time: string): string {
     if (time) {
       const inputDate = new Date(time);

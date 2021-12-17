@@ -35,16 +35,19 @@ module.exports = function (config) {
         {
           type: 'text-summary',
         },
+        {
+          type: 'lcov',
+        },
       ],
       check: {
-        emitWarning: false,
+        emitWarning: true,
         global: {
           // overall code base
           statements: 60,
           branches: 60,
           functions: 60,
           lines: 60,
-          excludes: ['foo/bar/**/*.js'],
+          excludes: [],
         },
         each: {
           // per file
@@ -52,12 +55,8 @@ module.exports = function (config) {
           branches: 60,
           functions: 60,
           lines: 60,
-          excludes: ['other/directory/**/*.js'],
-          overrides: {
-            'baz/component/**/*.js': {
-              statements: 98,
-            },
-          },
+          excludes: [],
+          overrides: {},
         },
       },
     },

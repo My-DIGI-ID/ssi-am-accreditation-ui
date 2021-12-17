@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021 Bundesrepublik Deutschland
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* eslint-disable class-methods-use-this */
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -11,14 +27,28 @@ import GuestDashboardViewModel from '../../models/guest-dashboard-view.model';
 import GuestApiModel from '../../models/guest-api.model';
 import GuestApiService from '../api/guest-api.service';
 
+/**
+ * Class representing the GuestDashboardStoreService
+ * @extends AbstractStore
+ */
 @Injectable({
   providedIn: 'root',
 })
 export default class GuestDashboardStoreService extends AbstractStore<GuestDashboardViewModel[]> {
+  /**
+   * Instantiates the GuestDashboardStoreService
+   * @param {GuestApiService} guestApiService - A service providing functions related to the guest api
+   * @param {Router} router - A service that provides navigation among views and URL manipulation capabilities.
+   */
   public constructor(private readonly guestApiService: GuestApiService, private router: Router) {
     super();
   }
 
+  /**
+   * Builds the store, retrieves the list of guests and the list of guest accreditations and returns an
+   * Observable of a guest with mapped status and accreditation ID
+   * @return {Observable<GuestDashboardViewModel[]>} - guest
+   */
   protected buildStore(): Observable<GuestDashboardViewModel[]> {
     const guestAccreditationList$ = this.getGuestsAccreditation();
     const guestsList$ = this.getGuests();
@@ -36,6 +66,13 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
     );
   }
 
+  /**
+   * Maps the status to any of the following values: 'PENDING', 'CANCELLED', 'ACCEPTED', 'CHECK_IN' or
+   * 'CHECK_OUT' and returns it
+   * @param {GuestDashboardViewModel} guest - guest dashboard view DTO
+   * @param {any} accreditation - accreditation object
+   * @return {string} status
+   */
   private statusMapping(guest: GuestDashboardViewModel, accreditation: any): string {
     let status = accreditation.find((a) => a.guestId === guest.id)?.status
       ? accreditation.find((a) => a.guestId === guest.id)?.status
@@ -61,18 +98,31 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
     return status;
   }
 
+  /**
+   * Retrieves an Observable of an array guests in dashboard view format
+   * @return {Observable<GuestDashboardViewModel[]>} guests
+   */
   public getGuests(): Observable<GuestDashboardViewModel[]> {
     return this.guestApiService
       .getGuests()
       .pipe(map((apiModels: GuestApiModel[]) => this.mapGuestApiModelToViewModel(apiModels)));
   }
 
-  public getGuestByPartId(guestId: string): Observable<GuestFormModel> {
+  /**
+   * Retrieves an Observable of the guest form based on the guest's party ID
+   * @param {string} guestId - guest party ID
+   * @return {Observable<GuestFormModel>} guest form
+   */
+  public getGuestByPartyId(guestId: string): Observable<GuestFormModel> {
     return this.guestApiService
-      .getGuestByPartId(guestId)
+      .getGuestByPartyId(guestId)
       .pipe(map((apiModels: any) => this.mapGuestApiModelToFormModel(apiModels)));
   }
 
+  /**
+   * Attempts to update guest based the on provided guest object. Then navigates to the guest/creation-status page
+   * @param {GuestApiModel} guest - guest
+   */
   public editGuest(guest: GuestApiModel): void {
     this.guestApiService.editGuest(guest).subscribe(
       (response) => {
@@ -86,6 +136,10 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
     );
   }
 
+  /**
+   * Attempts to add a guest based on the provided guest object. Then navigates to the guest/creation-status page
+   * @param {GuestApiModel} guest - guest
+   */
   public addGuest(guest: GuestApiModel): void {
     this.guestApiService.saveGuest(guest).subscribe(
       (response) => {
@@ -99,6 +153,10 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
     );
   }
 
+  /**
+   * Attempts to delete a guest based on the provided accreditation ID. Then navigates to the guest/dashboard page
+   * @param {GuestApiModel} guest - guest
+   */
   public deleteGuestByAccreditationId(accreditationId: string): void {
     this.guestApiService.deleteGuestByAccreditationId(accreditationId).subscribe(
       (response) => {
@@ -112,6 +170,10 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
     );
   }
 
+  /**
+   * Attempts to delete a guest based on the provided party ID. Then navigates to the guest/dashboard page
+   * @param {GuestApiModel} guest - guest
+   */
   public deleteGuestByPartyId(partyId: string): void {
     this.guestApiService.deleteGuestByPartyId(partyId).subscribe(
       (response) => {
@@ -125,6 +187,11 @@ export default class GuestDashboardStoreService extends AbstractStore<GuestDashb
     );
   }
 
+  /**
+   * Retrieves the invitation e-mail for the provided guest ID
+   * @param {string} id - guest ID
+   * @return {Observable<any>} invitation e-mail
+   */
   public downloadEmail(id: string): Observable<any> {
     return this.guestApiService.getInvitationEmail(id);
   }

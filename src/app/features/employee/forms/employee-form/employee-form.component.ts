@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021 Bundesrepublik Deutschland
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { TranslateService } from '@ngx-translate/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -5,6 +21,9 @@ import { IEmployeeStatus } from '../../interfaces/employee-status.interface';
 import EmployeeFormModel from '../../models/employee-form.model';
 import FormValidator from '../../../../shared/utilities/form-validator';
 
+/**
+ * Class representing the EmployeeFormComponent
+ */
 @Component({
   selector: 'app-employee-form',
   templateUrl: './employee-form.component.html',
@@ -33,16 +52,28 @@ export default class EmployeeFormComponent implements OnInit {
     },
   ];
 
+  /**
+   * Instantiates the EmployeeFormComponent
+   * @param {FormBuilder} formBuilder - Creates an AbstractControl from a user-specified configuration.
+   * @param {FormValidator} formValidator - Contains validation functions to use on the form fields.
+   * @param {TranslateService} translate - Internationalisation service
+   */
   public constructor(
     private readonly formBuilder: FormBuilder,
     private readonly formValidator: FormValidator,
     private readonly translate: TranslateService
   ) {}
 
+  /**
+   * Initialisation function that also initialises the employee form
+   */
   public ngOnInit(): void {
     this.employeeFormGroup = this.initEmployeeForm();
   }
 
+  /**
+   * Creates employee and emits a submit event with the created employee
+   */
   public submitEmployee(): void {
     const employee: EmployeeFormModel = this.createEmployee();
 

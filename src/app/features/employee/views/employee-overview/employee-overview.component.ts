@@ -1,3 +1,19 @@
+/*
+ * Copyright 2021 Bundesrepublik Deutschland
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
 import { TranslateService } from '@ngx-translate/core';
@@ -12,6 +28,9 @@ import { DialogComponent } from '../../../../shared/dialog/dialog.component';
 import EmployeeDashboardViewModel from '../../models/employee-dashboard-view.model';
 import EmployeeDashboardStoreService from '../../services/stores/employee-dashboard.store.service';
 
+/**
+ * Class representing the EmployeeOverviewComponent
+ */
 @Component({
   selector: 'app-employee-overview',
   templateUrl: './employee-overview.component.html',
@@ -54,6 +73,13 @@ export class EmployeeOverviewComponent implements OnInit, OnDestroy, AfterViewIn
 
   public dialogConfirmRef;
 
+  /**
+   * Instantiates the EmployeeOverviewComponent.
+   * @param {Router} router - A service that provides navigation among views and URL manipulation capabilities.
+   * @param {EmployeeDashboardStoreService} store - employee dashboard store - holds functions related to employee dashboard
+   * @param {MatDialog} dialog - Modal dialog service from Angular Material
+   * @param {TranslateService} translate - The internationalisation service
+   */
   public constructor(
     private readonly router: Router,
     private readonly store: EmployeeDashboardStoreService,
@@ -61,25 +87,41 @@ export class EmployeeOverviewComponent implements OnInit, OnDestroy, AfterViewIn
     private readonly translate: TranslateService
   ) {}
 
+  /**
+   * Initialising function that initialises the employee dashboard store and connects to it to retrieve data
+   */
   public ngOnInit(): void {
     this.init();
     this.subscribe();
   }
 
+  /**
+   * Hides the search row
+   */
   public openSearch() {
     this.hideSearchRow = true;
   }
 
+  /**
+   * Sets the search term to an empty string and shows the search row
+   */
   public searchClose() {
     this.searchText = '';
     this.hideSearchRow = false;
   }
 
+  /**
+   * Sets the pagination and the sorting of the data
+   */
   public ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
+  /**
+   * Applies the search filter and refreshes the page
+   * @param {any} event - event
+   */
   public applyFilter(event: any): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.searchValue = filterValue;
@@ -87,14 +129,25 @@ export class EmployeeOverviewComponent implements OnInit, OnDestroy, AfterViewIn
     this.refreshPage();
   }
 
+  /**
+   * Navigates to the employee/detail/ page corresponding to the employee whose ID was given
+   * @param {string} id - employee id
+   */
   public goToEmployeeDetails(id: string): void {
     this.router.navigate(['employee/detail/', id]);
   }
 
+  /**
+   * Navigates to the employee/add-employee page
+   */
   public goToAddEmployee(): void {
     this.router.navigateByUrl('employee/add-employee');
   }
 
+  /**
+   * Handler for clicking on tabs, sets the tab to the one that is clicked and refreshes the page
+   * @param {any} e - event
+   */
   public tabClick(e: any) {
     if (e.index === 0 || e.index === 1 || e.index === 2) {
       this.activeTab = e.index;
@@ -103,10 +156,19 @@ export class EmployeeOverviewComponent implements OnInit, OnDestroy, AfterViewIn
     this.refreshPage();
   }
 
+  /**
+   * Downloads email invitation for the given employee ID
+   * @param {string} id - event
+   */
   public downloadEmployeeEmailInvitation(id: string): void {
     this.dynamicDownload(id);
   }
 
+  /**
+   * Opens a modal that prompts the user to delete the employee with the given accreditation ID.
+   * If the user selects the affirmative response, the employee will be revoked.
+   * @param {string} accreditationId - accreditation id
+   */
   public openDeleteEmployeeDialog(accreditationId: string): void {
     this.dialogConfirmRef = this.dialog.open(DialogComponent, {
       width: '40%',
@@ -129,13 +191,16 @@ export class EmployeeOverviewComponent implements OnInit, OnDestroy, AfterViewIn
     });
   }
 
-  private revokeEmployee(accreditationId: string): void {
-    this.store.deleteEmployee(accreditationId);
+  /**
+   * Reloads page
+   */
+  public reloadPage(): void {
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
   }
 
-  public ngOnDestroy(): void {
-    this.searchValue = '';
-    this.store.reset();
+  private revokeEmployee(accreditationId: string): void {
+    this.store.deleteEmployee(accreditationId);
   }
 
   private init(): void {
@@ -227,8 +292,11 @@ export class EmployeeOverviewComponent implements OnInit, OnDestroy, AfterViewIn
     this.reloadPage();
   }
 
-  public reloadPage() {
-    // eslint-disable-next-line no-restricted-globals
-    location.reload();
+  /**
+   * When the page is destroyed, the search value is set to an empty string and the store is reset
+   */
+  public ngOnDestroy(): void {
+    this.searchValue = '';
+    this.store.reset();
   }
 }

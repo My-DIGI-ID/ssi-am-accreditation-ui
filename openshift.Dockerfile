@@ -13,26 +13,33 @@ COPY . /usr/src/app
 ARG CONFIGURATION=production
 
 RUN if [ "serve" != ${CONFIGURATION} ] ; then npx ng build --output-path=dist --configuration=$CONFIGURATION ; fi
+
 # expose ports, create env and ng serve
 ARG VERSION=latest
 ENV SSIBK_ACCREDITATION_UI_VERSION=${VERSION}
 EXPOSE 4200
 CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--watch", "--disable-host-check=true", "--poll", "2000"]
+
 # Stage 2: Run stage
 FROM nginx:1.18.0-alpine
 RUN apk update && apk add jq
 RUN apk add --upgrade libssl1.1 libcrypto1.1 libgd libxml2 libcurl curl apk-tools libgcrypt
+
 # Copy the nginx configuration
 COPY ./ops/nginx.conf /etc/nginx/conf.d/default.conf
 # Copy build from the 'build environment'
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+
 EXPOSE 4200
 # generate dynamic json from env
 COPY ./ops/docker-entrypoint.prod.sh /docker-entrypoint.sh
 
 ## Added to fix permission problems when starting in openshift
-RUN chmod 777 -R /usr/share/nginx && touch /usr/share/nginx/html/assets/config/config.json && chmod 777 /usr/share/nginx/html/assets/config/config.json
-RUN chmod 777 -R /var/cache/nginx && chmod 777 -R /etc/nginx && chmod 777 -R /var/run
+RUN chgrp -R 0 /usr/share/nginx && chmod -R g=u /usr/share/nginx && \
+    touch /usr/share/nginx/html/assets/config/config.json && chgrp -R 0 /usr/share/nginx/html/assets/config/config.json && chmod g=u /usr/share/nginx/html/assets/config/config.json && \
+    chgrp -R 0 /var/cache/nginx && chmod -R g=u /var/cache/nginx && \
+    chgrp -R 0 /etc/nginx && chmod -R g=u /etc/nginx && \
+    chgrp -R 0 /var/run && chmod -R g=u /var/run
 
 RUN ["chmod", "+x", "/docker-entrypoint.sh"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
